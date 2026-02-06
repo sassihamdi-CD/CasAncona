@@ -25,7 +25,20 @@ export default function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Locale-prefixed routes
+  // Public pages that load services from DB: never cache so admin changes show immediately
+  const localeMatch = path.match(/^\/(it|en|fr|ar)(\/.*|$)/);
+  if (localeMatch) {
+    const sub = localeMatch[2] === "" ? "/" : localeMatch[2]; // "" for /it, "/" for /it/, "/servizi" for /it/servizi
+    if (sub === "/" || sub === "/servizi" || sub === "/servizi/") {
+      const res = intlMiddleware(request);
+      if (res instanceof NextResponse) {
+        res.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        res.headers.set("Pragma", "no-cache");
+      }
+      return res;
+    }
+  }
+
   return intlMiddleware(request);
 }
 
