@@ -1,0 +1,136 @@
+{
+  "common": {
+    "siteName": "Studio CAS Settore Legale di Souiai SNC",
+    "headerSiteName": "Studio CAS",
+    "nav": {
+      "home": "Home",
+      "services": "Servizi online",
+      "about": "Chi siamo",
+      "contact": "Contatti",
+      "book": "Prenota"
+    },
+    "footer": {
+      "tagline": "Centro di Ascolto — Assistenza sociale non residenziale.",
+      "links": "Link",
+      "activity": "Attività",
+      "copyright": "Tutti i diritti riservati."
+    },
+    "buttons": {
+      "contact": "Contatti",
+      "bookConsultation": "Prenota una consulenza",
+      "servicesOnline": "Servizi online",
+      "bookOnline": "Prenota online",
+      "viewAllServices": "Vedi tutti i servizi",
+      "openInGoogleMaps": "Apri in Google Maps",
+      "address": "Indirizzo"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Studio CAS Settore Legale di Souiai SNC",
+      "titleLine1": "Studio CAS Settore Legale",
+      "titleLine2": "di Souiai SNC",
+      "subtitle": "Centro di Ascolto — Assistenza sociale, informazione e consulenza per migranti. Prenota una consulenza online o in sede.",
+      "bookCta": "Prenota una consulenza",
+      "servicesCta": "Servizi online",
+      "slideLabel": "Vai allo slide {n}",
+      "alt1": "Studio CAS Settore Legale di Souiai SNC — Centro di Ascolto, spazio di accoglienza",
+      "alt2": "Ancona e territorio — assistenza e consulenza",
+      "alt3": "Consulenza e supporto — incontro e informazione"
+    },
+    "section1": {
+      "label": "Il nostro ambito",
+      "title": "Cosa facciamo",
+      "lead": "Attività di supporto sociale e assistenziale che non rientrano in altre categorie più specifiche. Rientriamo nel settore dell'assistenza sociale non residenziale."
+    },
+    "section2": {
+      "label": "Consulenza a distanza",
+      "title": "Servizi online",
+      "lead": "Prenota e paga online. Consulenza via video con un operatore.",
+      "prenota": "Prenota",
+      "pagaOnline": "Paga online",
+      "videoConsulenza": "Video consulenza",
+      "placeholder": "I servizi online saranno visibili qui non appena configurati.",
+      "placeholderHint": "Nel frattempo puoi contattarci per informazioni o prenotare in sede."
+    },
+    "section3": {
+      "title": "Hai bisogno di assistenza?",
+      "lead": "Contattaci per informazioni o per fissare un appuntamento in sede."
+    }
+  },
+  "ateco": {
+    "includes": "Attività di supporto sociale e assistenziale che non rientrano in altre categorie più specifiche.",
+    "sector": "Assistenza sociale non residenziale",
+    "typicalActivities": [
+      "Sportelli informativi per migranti",
+      "Assistenza amministrativa o di supporto (senza ricovero o residenza)",
+      "Mediazione culturale o sociale non specialistica (non sanitaria)"
+    ],
+    "classification": "Classificazione ATECO",
+    "codeDescription": "Codice ATECO {code} — {description}"
+  },
+  "chiSiamo": {
+    "title": "Chi siamo",
+    "lead": "Studio CAS Settore Legale di Souiai SNC è un Centro di Ascolto che opera nel settore dell'assistenza sociale non residenziale.",
+    "ourActivity": "La nostra attività",
+    "sectorLead": "Rientriamo nel settore:",
+    "whatWeOffer": "Cosa offriamo"
+  },
+  "contatti": {
+    "title": "Contatti",
+    "lead": "Per informazioni o per fissare un appuntamento in sede, contattaci.",
+    "whereWeAre": "Dove siamo",
+    "whereWeAreLead": "Se prenoti una consulenza in presenza per la prima volta, qui sotto trovi l'indirizzo esatto e la mappa per raggiungere la nostra sede.",
+    "phoneHours": "Telefono e orari",
+    "phonePlaceholder": "Telefono e orari di apertura saranno inseriti qui quando disponibili.",
+    "bookLink": "Nel frattempo puoi prenotare una consulenza online dalla pagina",
+    "bookLinkText": "Prenota"
+  },
+  "servizi": {
+    "title": "Servizi online",
+    "lead": "Prenota e paga online. Ricevi la consulenza via video con un operatore.",
+    "metaDescription": "Prenota una consulenza online. Pagamento sicuro e video consulenza con un operatore.",
+    "empty": "I servizi online saranno visibili qui non appena configurati.",
+    "emptyHint": "Contattaci per informazioni sui servizi disponibili.",
+    "documentsRequired": "Documenti da preparare"
+  },
+  "book": {
+    "title": "Prenota una consulenza",
+    "lead": "Scegli il servizio, la data e l'orario. Dopo il pagamento riceverai il link per la video consulenza.",
+    "viewServices": "Vedi i servizi disponibili",
+    "stepService": "Servizio",
+    "stepType": "Tipo di consulenza",
+    "stepDateTime": "Data e orario",
+    "stepDetails": "I tuoi dati",
+    "inPerson": "In sede (gratuito)",
+    "online": "Online (a pagamento)",
+    "selectDate": "Scegli data",
+    "selectTime": "Scegli orario",
+    "noSlots": "Nessun orario disponibile in questa data.",
+    "name": "Nome e cognome",
+    "email": "Email",
+    "phone": "Telefono (opzionale)",
+    "message": "Messaggio (opzionale)",
+    "reasonForBooking": "Motivo della richiesta",
+    "reasonForBookingPlaceholder": "Es. rinnovo permesso, ricongiungimento familiare, informazioni su una pratica…",
+    "submit": "Conferma e continua",
+    "submitting": "Invio in corso…",
+    "free": "Gratuito",
+    "errorLoad": "Impossibile caricare i servizi. Riprova più tardi.",
+    "errorSlots": "Impossibile caricare gli orari. Riprova.",
+    "errorSubmit": "Errore durante la prenotazione. Riprova."
+  },
+  "bookingConfirm": {
+    "title": "Prenotazione confermata",
+    "inPerson": "Consulenza in sede",
+    "online": "Consulenza online",
+    "when": "Data e orario",
+    "duration": "Durata",
+    "videoLink": "Link video",
+    "videoLinkHint": "Il link per la video consulenza sarà disponibile a breve.",
+    "backHome": "Torna alla home"
+  },
+  "officeMap": {
+    "heading": "Dove siamo"
+  }
+}

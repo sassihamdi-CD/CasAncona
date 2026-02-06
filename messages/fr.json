@@ -1,0 +1,136 @@
+{
+  "common": {
+    "siteName": "Studio CAS Settore Legale di Souiai SNC",
+    "headerSiteName": "Studio CAS",
+    "nav": {
+      "home": "Accueil",
+      "services": "Services en ligne",
+      "about": "Qui sommes-nous",
+      "contact": "Contact",
+      "book": "Réserver"
+    },
+    "footer": {
+      "tagline": "Centre d'écoute — Action sociale non résidentielle.",
+      "links": "Liens",
+      "activity": "Activité",
+      "copyright": "Tous droits réservés."
+    },
+    "buttons": {
+      "contact": "Contact",
+      "bookConsultation": "Réserver une consultation",
+      "servicesOnline": "Services en ligne",
+      "bookOnline": "Réserver en ligne",
+      "viewAllServices": "Voir tous les services",
+      "openInGoogleMaps": "Ouvrir dans Google Maps",
+      "address": "Adresse"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Studio CAS Settore Legale di Souiai SNC",
+      "titleLine1": "Studio CAS Settore Legale",
+      "titleLine2": "di Souiai SNC",
+      "subtitle": "Centre d'écoute — Action sociale, information et conseil pour les migrants. Réservez une consultation en ligne ou sur place.",
+      "bookCta": "Réserver une consultation",
+      "servicesCta": "Services en ligne",
+      "slideLabel": "Aller au slide {n}",
+      "alt1": "Studio CAS Settore Legale di Souiai SNC — Centre d'écoute, espace d'accueil",
+      "alt2": "Ancona et territoire — assistance et conseil",
+      "alt3": "Conseil et soutien — rencontre et information"
+    },
+    "section1": {
+      "label": "Notre champ d'action",
+      "title": "Ce que nous faisons",
+      "lead": "Activités de soutien social et d'aide qui ne relèvent pas d'autres catégories plus spécifiques. Nous intervenons dans le secteur de l'action sociale non résidentielle."
+    },
+    "section2": {
+      "label": "Consultation à distance",
+      "title": "Services en ligne",
+      "lead": "Réservez et payez en ligne. Consultation vidéo avec un opérateur.",
+      "prenota": "Réserver",
+      "pagaOnline": "Payer en ligne",
+      "videoConsulenza": "Consultation vidéo",
+      "placeholder": "Les services en ligne seront visibles ici une fois configurés.",
+      "placeholderHint": "En attendant, vous pouvez nous contacter pour des informations ou réserver sur place."
+    },
+    "section3": {
+      "title": "Vous avez besoin d'aide ?",
+      "lead": "Contactez-nous pour des informations ou pour prendre rendez-vous sur place."
+    }
+  },
+  "ateco": {
+    "includes": "Activités de soutien social et d'aide qui ne relèvent pas d'autres catégories plus spécifiques.",
+    "sector": "Action sociale non résidentielle",
+    "typicalActivities": [
+      "Guichets d'information pour migrants",
+      "Assistance administrative ou de soutien (sans hébergement ni résidence)",
+      "Médiation culturelle ou sociale non spécialisée (non médicale)"
+    ],
+    "classification": "Classification ATECO",
+    "codeDescription": "Code ATECO {code} — {description}"
+  },
+  "chiSiamo": {
+    "title": "Qui sommes-nous",
+    "lead": "Studio CAS Settore Legale di Souiai SNC est un Centre d'écoute qui intervient dans le secteur de l'action sociale non résidentielle.",
+    "ourActivity": "Notre activité",
+    "sectorLead": "Nous intervenons dans le secteur :",
+    "whatWeOffer": "Ce que nous offrons"
+  },
+  "contatti": {
+    "title": "Contact",
+    "lead": "Pour des informations ou pour prendre rendez-vous sur place, contactez-nous.",
+    "whereWeAre": "Où nous trouver",
+    "whereWeAreLead": "Si vous réservez une consultation en présence pour la première fois, vous trouverez ci-dessous l'adresse exacte et le plan pour rejoindre notre siège.",
+    "phoneHours": "Téléphone et horaires",
+    "phonePlaceholder": "Le numéro de téléphone et les horaires d'ouverture seront ajoutés ici lorsqu'ils seront disponibles.",
+    "bookLink": "En attendant, vous pouvez réserver une consultation en ligne depuis la page",
+    "bookLinkText": "Réserver"
+  },
+  "servizi": {
+    "title": "Services en ligne",
+    "lead": "Réservez et payez en ligne. Recevez votre consultation par vidéo avec un opérateur.",
+    "metaDescription": "Réservez une consultation en ligne. Paiement sécurisé et consultation vidéo avec un opérateur.",
+    "empty": "Les services en ligne seront visibles ici une fois configurés.",
+    "emptyHint": "Contactez-nous pour des informations sur les services disponibles.",
+    "documentsRequired": "Documents à préparer"
+  },
+  "book": {
+    "title": "Réserver une consultation",
+    "lead": "Choisissez le service, la date et l'heure. Après le paiement vous recevrez le lien pour la consultation vidéo.",
+    "viewServices": "Voir les services disponibles",
+    "stepService": "Service",
+    "stepType": "Type de consultation",
+    "stepDateTime": "Date et heure",
+    "stepDetails": "Vos coordonnées",
+    "inPerson": "Sur place (gratuit)",
+    "online": "En ligne (payant)",
+    "selectDate": "Choisir la date",
+    "selectTime": "Choisir l'heure",
+    "noSlots": "Aucun créneau disponible à cette date.",
+    "name": "Nom et prénom",
+    "email": "Email",
+    "phone": "Téléphone (optionnel)",
+    "message": "Message (optionnel)",
+    "reasonForBooking": "Motif de la demande",
+    "reasonForBookingPlaceholder": "Ex. renouvellement de titre, regroupement familial, question sur une démarche…",
+    "submit": "Confirmer et continuer",
+    "submitting": "Envoi en cours…",
+    "free": "Gratuit",
+    "errorLoad": "Impossible de charger les services. Réessayez.",
+    "errorSlots": "Impossible de charger les créneaux. Réessayez.",
+    "errorSubmit": "Échec de la réservation. Réessayez."
+  },
+  "bookingConfirm": {
+    "title": "Réservation confirmée",
+    "inPerson": "Consultation sur place",
+    "online": "Consultation en ligne",
+    "when": "Date et heure",
+    "duration": "Durée",
+    "videoLink": "Lien vidéo",
+    "videoLinkHint": "Le lien pour la consultation vidéo sera disponible sous peu.",
+    "backHome": "Retour à l'accueil"
+  },
+  "officeMap": {
+    "heading": "Où nous trouver"
+  }
+}

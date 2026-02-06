@@ -1,0 +1,136 @@
+{
+  "common": {
+    "siteName": "Studio CAS Settore Legale di Souiai SNC",
+    "headerSiteName": "Studio CAS",
+    "nav": {
+      "home": "Home",
+      "services": "Online services",
+      "about": "About us",
+      "contact": "Contact",
+      "book": "Book"
+    },
+    "footer": {
+      "tagline": "Listening Centre — Non-residential social assistance.",
+      "links": "Links",
+      "activity": "Activity",
+      "copyright": "All rights reserved."
+    },
+    "buttons": {
+      "contact": "Contact",
+      "bookConsultation": "Book a consultation",
+      "servicesOnline": "Online services",
+      "bookOnline": "Book online",
+      "viewAllServices": "View all services",
+      "openInGoogleMaps": "Open in Google Maps",
+      "address": "Address"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Studio CAS Settore Legale di Souiai SNC",
+      "titleLine1": "Studio CAS Settore Legale",
+      "titleLine2": "di Souiai SNC",
+      "subtitle": "Listening Centre — Social assistance, information and legal advice for migrants. Book an online or in-person consultation.",
+      "bookCta": "Book a consultation",
+      "servicesCta": "Online services",
+      "slideLabel": "Go to slide {n}",
+      "alt1": "Studio CAS Settore Legale di Souiai SNC — Listening Centre, welcoming space",
+      "alt2": "Ancona and area — assistance and consultation",
+      "alt3": "Consultation and support — meeting and information"
+    },
+    "section1": {
+      "label": "Our scope",
+      "title": "What we do",
+      "lead": "Social and welfare support activities that do not fall into other more specific categories. We operate in the non-residential social assistance sector."
+    },
+    "section2": {
+      "label": "Remote consultation",
+      "title": "Online services",
+      "lead": "Book and pay online. Video consultation with an operator.",
+      "prenota": "Book",
+      "pagaOnline": "Pay online",
+      "videoConsulenza": "Video consultation",
+      "placeholder": "Online services will be visible here once configured.",
+      "placeholderHint": "In the meantime you can contact us for information or book in person."
+    },
+    "section3": {
+      "title": "Need assistance?",
+      "lead": "Contact us for information or to schedule an in-person appointment."
+    }
+  },
+  "ateco": {
+    "includes": "Social and welfare support activities that do not fall into other more specific categories.",
+    "sector": "Non-residential social assistance",
+    "typicalActivities": [
+      "Information desks for migrants",
+      "Administrative or support assistance (without accommodation or residence)",
+      "Non-specialist cultural or social mediation (non-medical)"
+    ],
+    "classification": "ATECO classification",
+    "codeDescription": "ATECO code {code} — {description}"
+  },
+  "chiSiamo": {
+    "title": "About us",
+    "lead": "Studio CAS Settore Legale di Souiai SNC is a Listening Centre operating in the non-residential social assistance sector.",
+    "ourActivity": "Our activity",
+    "sectorLead": "We operate in the sector:",
+    "whatWeOffer": "What we offer"
+  },
+  "contatti": {
+    "title": "Contact",
+    "lead": "For information or to schedule an in-person appointment, contact us.",
+    "whereWeAre": "Where we are",
+    "whereWeAreLead": "If you are booking an in-person consultation for the first time, below you will find the exact address and map to reach our office.",
+    "phoneHours": "Phone and hours",
+    "phonePlaceholder": "Phone number and opening hours will be added here when available.",
+    "bookLink": "In the meantime you can book an online consultation from the",
+    "bookLinkText": "Book"
+  },
+  "servizi": {
+    "title": "Online services",
+    "lead": "Book and pay online. Receive your consultation via video with an operator.",
+    "metaDescription": "Book an online consultation. Secure payment and video consultation with an operator.",
+    "empty": "Online services will be visible here once configured.",
+    "emptyHint": "Contact us for information on available services.",
+    "documentsRequired": "Documents to prepare"
+  },
+  "book": {
+    "title": "Book a consultation",
+    "lead": "Choose the service, date and time. After payment you will receive the link for the video consultation.",
+    "viewServices": "View available services",
+    "stepService": "Service",
+    "stepType": "Consultation type",
+    "stepDateTime": "Date and time",
+    "stepDetails": "Your details",
+    "inPerson": "In person (free)",
+    "online": "Online (paid)",
+    "selectDate": "Choose date",
+    "selectTime": "Choose time",
+    "noSlots": "No slots available on this date.",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "message": "Message (optional)",
+    "reasonForBooking": "Reason for booking",
+    "reasonForBookingPlaceholder": "E.g. residence permit renewal, family reunification, question about a procedure…",
+    "submit": "Confirm and continue",
+    "submitting": "Submitting…",
+    "free": "Free",
+    "errorLoad": "Could not load services. Please try again.",
+    "errorSlots": "Could not load slots. Please try again.",
+    "errorSubmit": "Booking failed. Please try again."
+  },
+  "bookingConfirm": {
+    "title": "Booking confirmed",
+    "inPerson": "In-person consultation",
+    "online": "Online consultation",
+    "when": "Date and time",
+    "duration": "Duration",
+    "videoLink": "Video link",
+    "videoLinkHint": "The video consultation link will be available shortly.",
+    "backHome": "Back to home"
+  },
+  "officeMap": {
+    "heading": "Where we are"
+  }
+}

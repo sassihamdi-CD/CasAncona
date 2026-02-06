@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 22 78 99;
+    --color-primary-hover: 21 94 117;
+    --color-accent: 180 83 9;
+    --color-surface: 250 250 249;
+    --color-muted: 120 113 108;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply bg-stone-50 text-stone-900;
+  }
+}
+
+@layer components {
+  .container-narrow {
+    @apply mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8;
+  }
+  .container-wide {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section label above headings */
+  .section-label {
+    @apply text-xs font-semibold uppercase tracking-wider text-primary;
+  }
+
+  /* Subtle entrance for section content */
+  .animate-in {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.1s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.2s; }
+  .stagger-5 { animation-delay: 0.25s; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
