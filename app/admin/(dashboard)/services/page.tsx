@@ -8,7 +8,7 @@ import { AdminServiceForm } from "../../AdminServiceForm";
 import { useAdminLocale } from "../../AdminLocaleProvider";
 
 export default function AdminServicesPage() {
-  const { t } = useAdminLocale();
+  const { t, locale } = useAdminLocale();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
