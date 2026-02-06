@@ -19,7 +19,7 @@ export async function GET() {
     if (error || !data) {
       return NextResponse.json(
         { phone: null, email: null, hours: null },
-        { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120" } }
+        { headers: { "Cache-Control": "no-store, max-age=0" } }
       );
     }
 
@@ -28,7 +28,7 @@ export async function GET() {
       phone: row.phone ?? null,
       email: row.email ?? null,
       hours: row.hours ?? null,
-    }, { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120" } });
+    }, { headers: { "Cache-Control": "no-store, max-age=0" } });
   } catch (e) {
     console.error("[api/site-contact]", e);
     return NextResponse.json({ phone: null, email: null, hours: null });
