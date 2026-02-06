@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
       .eq("id", apt.assigned_staff_id)
       .single();
     const staffRow = staff as StaffRow | null;
-    if (staffRow?.telegram_chat_id) {
+    if (staffRow?.telegram_chat_id && roomUrl) {
       await notifyLawyerTelegram({
         telegramChatId: staffRow.telegram_chat_id,
         clientName: apt.client_name,

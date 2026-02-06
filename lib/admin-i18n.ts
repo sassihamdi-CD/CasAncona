@@ -120,10 +120,13 @@ export const adminMessages: Record<
       edit: string;
       deactivate: string;
       reactivate: string;
+      deletePermanently: string;
+      confirmDeletePermanently: string;
       sessionExpired: string;
       loadError: string;
       errorDeactivate: string;
       errorReactivate: string;
+      errorDeletePermanent: string;
     };
     serviceForm: {
       editService: string;

@@ -43,7 +43,7 @@ export default function AdminCreateAppointmentPage() {
         if (!cancelled) {
           setServices(data.services ?? []);
           const active = (data.services ?? []).filter((s) => s.active);
-          if (active[0] && !serviceId) setServiceId(active[0].id);
+          if (active[0]) setServiceId((prev) => (prev ? prev : active[0].id));
         }
       } catch {
         if (!cancelled) setServicesError(t("appointments.loadError"));
@@ -52,6 +52,8 @@ export default function AdminCreateAppointmentPage() {
       }
     })();
     return () => { cancelled = true; };
+    // Intentionally run once on mount to load services and set initial serviceId
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t]);
 
   const loadSlots = useCallback(async () => {

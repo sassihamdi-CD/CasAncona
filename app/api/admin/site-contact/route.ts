@@ -75,10 +75,11 @@ export async function PATCH(request: NextRequest) {
         } as never)
         .select("phone, email, hours")
         .single();
+      const row = inserted as unknown as ContactRow | null;
       return NextResponse.json({
-        phone: (inserted as ContactRow)?.phone ?? "",
-        email: (inserted as ContactRow)?.email ?? "",
-        hours: (inserted as ContactRow)?.hours ?? "",
+        phone: row?.phone ?? "",
+        email: row?.email ?? "",
+        hours: row?.hours ?? "",
       });
     }
 
