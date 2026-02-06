@@ -474,13 +474,21 @@ const STORAGE_KEY = "cas-admin-locale";
 
 export function getStoredAdminLocale(): AdminLocale {
   if (typeof window === "undefined") return "it";
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored === "en" ? "en" : "it";
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored === "en" ? "en" : "it";
+  } catch {
+    return "it";
+  }
 }
 
 export function setStoredAdminLocale(locale: AdminLocale): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, locale);
+  try {
+    localStorage.setItem(STORAGE_KEY, locale);
+  } catch {
+    // ignore if localStorage is full or disabled
+  }
 }
 
 export function t(

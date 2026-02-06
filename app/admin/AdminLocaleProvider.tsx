@@ -10,7 +10,6 @@ import {
 } from "react";
 import type { AdminLocale } from "@/lib/admin-i18n";
 import {
-  adminMessages,
   getStoredAdminLocale,
   setStoredAdminLocale,
   t as translate,
@@ -34,8 +33,8 @@ export function AdminLocaleProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const setLocale = useCallback((next: AdminLocale) => {
-    setLocaleState(next);
     setStoredAdminLocale(next);
+    setLocaleState(next);
   }, []);
 
   const t = useCallback(
@@ -51,7 +50,10 @@ export function AdminLocaleProvider({ children }: { children: React.ReactNode })
 
   return (
     <AdminLocaleContext.Provider value={value}>
-      {children}
+      {/* key so locale change forces full re-render and clears any stale translations */}
+      <div key={locale}>
+        {children}
+      </div>
     </AdminLocaleContext.Provider>
   );
 }
