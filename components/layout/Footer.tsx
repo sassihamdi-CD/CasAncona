@@ -1,10 +1,20 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { ATECO_CODE, ATECO_DESCRIPTION } from "@/lib/constants/office";
+import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { SITE_CONTACT_ROW_ID } from "@/lib/constants/site-contact";
 
 export async function Footer() {
   const t = await getTranslations("common.footer");
   const tNav = await getTranslations("common.nav");
+
+  const { data: contactRow } = await getSupabaseAdmin()
+    .from("site_contact")
+    .select("phone, email")
+    .eq("id", SITE_CONTACT_ROW_ID)
+    .maybeSingle();
+  const contact = contactRow as { phone: string | null; email: string | null } | null;
+  const hasContact = contact && (contact.phone || contact.email);
 
   const footerLinks = [
     { href: "/", label: tNav("home") },
@@ -25,6 +35,24 @@ export async function Footer() {
               di Souiai SNC
             </p>
             <p className="mt-1 text-sm text-stone-600">{t("tagline")}</p>
+            {hasContact && (
+              <div className="mt-3 space-y-1 text-sm text-stone-600">
+                {contact!.phone && (
+                  <p>
+                    <a href={`tel:${contact!.phone.replace(/\s/g, "")}`} className="hover:text-primary">
+                      {contact!.phone}
+                    </a>
+                  </p>
+                )}
+                {contact!.email && (
+                  <p>
+                    <a href={`mailto:${contact!.email}`} className="hover:text-primary">
+                      {contact!.email}
+                    </a>
+                  </p>
+                )}
+              </div>
+            )}
           </div>
           <div>
             <p className="text-sm font-medium text-stone-900">{t("links")}</p>

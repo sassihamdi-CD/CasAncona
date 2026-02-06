@@ -22,6 +22,8 @@ export type {
   GetAdminAppointmentsQuery,
   GetAdminAppointmentsResponse,
   GetAdminAppointmentResponse,
+  AdminClientSummary,
+  GetAdminClientsResponse,
   PatchAdminAppointmentBody,
   PatchAdminAppointmentResponse,
   GetAdminServicesResponse,

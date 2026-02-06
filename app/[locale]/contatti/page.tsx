@@ -1,8 +1,12 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { OfficeMap } from "@/components/contact/OfficeMap";
+import { getSupabaseAdmin } from "@/lib/supabase/server";
+import { SITE_CONTACT_ROW_ID } from "@/lib/constants/site-contact";
 
 type Props = { params: Promise<{ locale: string }> };
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
@@ -17,6 +21,14 @@ export default async function ContattiPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("contatti");
+
+  const { data: contactRow } = await getSupabaseAdmin()
+    .from("site_contact")
+    .select("phone, email, hours")
+    .eq("id", SITE_CONTACT_ROW_ID)
+    .maybeSingle();
+  const contact = contactRow as { phone: string | null; email: string | null; hours: string | null } | null;
+  const hasContact = contact && (contact.phone || contact.email || contact.hours);
 
   return (
     <div className="container-wide py-12 sm:py-16">
@@ -37,7 +49,33 @@ export default async function ContattiPage({ params }: Props) {
 
       <div className="mt-10 rounded-xl border border-stone-200 bg-white p-8 sm:p-10">
         <h2 className="text-lg font-semibold text-stone-900">{t("phoneHours")}</h2>
-        <p className="mt-3 text-stone-600">{t("phonePlaceholder")}</p>
+        {hasContact ? (
+          <div className="mt-3 space-y-2 text-stone-700">
+            {contact!.phone && (
+              <p>
+                <span className="font-medium">{t("phone")}:</span>{" "}
+                <a href={`tel:${contact!.phone.replace(/\s/g, "")}`} className="text-primary hover:underline">
+                  {contact!.phone}
+                </a>
+              </p>
+            )}
+            {contact!.email && (
+              <p>
+                <span className="font-medium">{t("email")}:</span>{" "}
+                <a href={`mailto:${contact!.email}`} className="text-primary hover:underline">
+                  {contact!.email}
+                </a>
+              </p>
+            )}
+            {contact!.hours && (
+              <p className="whitespace-pre-wrap">
+                <span className="font-medium">{t("hours")}:</span> {contact!.hours}
+              </p>
+            )}
+          </div>
+        ) : (
+          <p className="mt-3 text-stone-600">{t("phonePlaceholder")}</p>
+        )}
         <p className="mt-4 text-sm text-stone-500">
           {t("bookLink")}{" "}
           <Link href="/book" className="font-medium text-primary hover:text-primary-hover">

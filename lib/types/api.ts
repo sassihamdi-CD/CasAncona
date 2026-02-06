@@ -24,6 +24,8 @@ export interface GetSlotsQuery {
 
 export interface GetSlotsResponse {
   slots: AvailableSlot[];
+  /** When requested with includeBooked=true: slots that are occupied (show in red). */
+  bookedSlots?: AvailableSlot[];
 }
 
 export interface CreateBookingBody {
@@ -33,7 +35,7 @@ export interface CreateBookingBody {
   startAt: string; // ISO 8601 UTC
   clientName: string;
   clientEmail: string;
-  clientPhone?: string;
+  clientPhone: string;
   clientMessage?: string;
   /** Optional locale for redirect URLs (e.g. "it") so confirmation/cancel use /[locale]/... */
   locale?: string;
@@ -68,6 +70,21 @@ export interface GetAdminAppointmentsResponse {
   appointments: Appointment[];
 }
 
+/** Past clients aggregated from appointments (confirmed/completed). */
+export interface AdminClientSummary {
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string | null;
+  totalPaidCents: number;
+  currency: string;
+  appointmentCount: number;
+}
+
+export interface GetAdminClientsResponse {
+  clients: AdminClientSummary[];
+  total: number;
+}
+
 export interface GetAdminAppointmentResponse {
   appointment: Appointment;
 }
@@ -78,6 +95,20 @@ export interface PatchAdminAppointmentBody {
 }
 
 export interface PatchAdminAppointmentResponse {
+  appointment: Appointment;
+}
+
+/** Admin create walk-in appointment (in person, no payment). Same slot validation as public booking. */
+export interface CreateAdminAppointmentBody {
+  serviceId: string;
+  startAt: string; // ISO 8601 UTC
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  clientMessage?: string;
+}
+
+export interface CreateAdminAppointmentResponse {
   appointment: Appointment;
 }
 

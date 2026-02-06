@@ -1,5 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { fetchServices } from "@/lib/api/client";
+import { getSupabaseAdmin } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/database.types";
+import { mapService } from "@/lib/db/map";
+import type { Service } from "@/lib/types";
 import { getServiceName, getServiceDescription, getServiceDocumentsRequired } from "@/lib/i18n/service";
 import type { Locale } from "@/lib/i18n/service";
 import { ServiceCard } from "@/components/ui/ServiceCard";
@@ -7,6 +10,7 @@ import { ServiceCard } from "@/components/ui/ServiceCard";
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ locale: string }> };
+type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
 
 export async function generateMetadata({ params }: Props) {
   const { locale } = await params;
@@ -23,13 +27,13 @@ export default async function ServiziPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: "servizi" });
   const safeLocale = locale as Locale;
 
-  let services: Awaited<ReturnType<typeof fetchServices>>["services"] = [];
-  try {
-    const data = await fetchServices();
-    services = data.services;
-  } catch {
-    // API unavailable
-  }
+  const supabase = getSupabaseAdmin();
+  const { data: rows } = await supabase
+    .from("services")
+    .select("*")
+    .eq("active", true)
+    .order("sort_order", { ascending: true });
+  const services: Service[] = (rows ?? []).map((row) => mapService(row as ServiceRow));
 
   return (
     <div className="container-wide py-12 sm:py-16">

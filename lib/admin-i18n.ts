@@ -23,9 +23,25 @@ export const adminMessages: Record<
       adminTitle: string;
       navDashboard: string;
       navAppointments: string;
+      navCreateAppointment: string;
+      navClients: string;
+      navContactHours: string;
       navServices: string;
       logout: string;
       language: string;
+    };
+    siteContact: {
+      title: string;
+      description: string;
+      phone: string;
+      email: string;
+      hours: string;
+      hoursPlaceholder: string;
+      save: string;
+      saving: string;
+      success: string;
+      loadError: string;
+      saveError: string;
     };
     dashboard: {
       title: string;
@@ -42,6 +58,7 @@ export const adminMessages: Record<
     };
     appointments: {
       title: string;
+      createAppointment: string;
       refresh: string;
       loading: string;
       noAppointments: string;
@@ -57,6 +74,35 @@ export const adminMessages: Record<
       note: string;
       sessionExpired: string;
       loadError: string;
+      createTitle: string;
+      createService: string;
+      createDate: string;
+      createTime: string;
+      createClientName: string;
+      createClientEmail: string;
+      createClientPhone: string;
+      createClientMessage: string;
+      createSubmit: string;
+      createSubmitting: string;
+      createSuccess: string;
+      createErrorSlot: string;
+      createError: string;
+      slotBooked: string;
+      selectDate: string;
+      selectTime: string;
+      noSlots: string;
+    };
+    clients: {
+      title: string;
+      searchPlaceholder: string;
+      name: string;
+      email: string;
+      phone: string;
+      totalPaid: string;
+      appointments: string;
+      noClients: string;
+      loadError: string;
+      clientCount: string;
     };
     services: {
       title: string;
@@ -100,6 +146,7 @@ export const adminMessages: Record<
       documentsPlaceholder: string;
       durationMin: string;
       priceCents: string;
+      priceEurosHint: string;
       currency: string;
       active: string;
       activeHint: string;
@@ -126,9 +173,25 @@ export const adminMessages: Record<
       adminTitle: "Studio CAS Admin",
       navDashboard: "Dashboard",
       navAppointments: "Prenotazioni",
+      navCreateAppointment: "Nuova prenotazione",
+      navClients: "Clienti",
+      navContactHours: "Telefono e orari",
       navServices: "Servizi",
       logout: "Esci",
       language: "Lingua",
+    },
+    siteContact: {
+      title: "Telefono e orari",
+      description: "Questi dati sono mostrati nella sezione Contatti del sito. Modifica e salva.",
+      phone: "Telefono",
+      email: "Email",
+      hours: "Orari di apertura",
+      hoursPlaceholder: "Es: Lun–Ven 9:00–13:00, 14:00–18:00",
+      save: "Salva",
+      saving: "Salvataggio…",
+      success: "Modifiche salvate.",
+      loadError: "Errore di caricamento",
+      saveError: "Errore durante il salvataggio",
     },
     dashboard: {
       title: "Dashboard",
@@ -145,6 +208,7 @@ export const adminMessages: Record<
     },
     appointments: {
       title: "Prenotazioni",
+      createAppointment: "Crea prenotazione (in sede)",
       refresh: "Aggiorna",
       loading: "Caricamento…",
       noAppointments: "Nessuna prenotazione nei prossimi 14 giorni.",
@@ -160,6 +224,35 @@ export const adminMessages: Record<
       note: "Mostra prenotazioni da oggi ai prossimi 14 giorni.",
       sessionExpired: "Sessione scaduta. Effettua di nuovo l'accesso.",
       loadError: "Errore di caricamento",
+      createTitle: "Nuova prenotazione (cliente in ufficio)",
+      createService: "Servizio",
+      createDate: "Data",
+      createTime: "Ora",
+      createClientName: "Nome cliente",
+      createClientEmail: "Email",
+      createClientPhone: "Telefono",
+      createClientMessage: "Note",
+      createSubmit: "Crea prenotazione",
+      createSubmitting: "Creazione…",
+      createSuccess: "Prenotazione creata.",
+      createErrorSlot: "Orario non più disponibile. Scegli un altro slot (in rosso = già occupato).",
+      createError: "Errore durante la creazione.",
+      slotBooked: "Occupato",
+      selectDate: "Scegli data",
+      selectTime: "Scegli orario",
+      noSlots: "Nessun orario disponibile in questa data.",
+    },
+    clients: {
+      title: "Clienti",
+      searchPlaceholder: "Cerca per nome o email…",
+      name: "Nome",
+      email: "Email",
+      phone: "Telefono",
+      totalPaid: "Totale pagato",
+      appointments: "Prenotazioni",
+      noClients: "Nessun cliente trovato.",
+      loadError: "Errore di caricamento",
+      clientCount: "{count} clienti",
     },
     services: {
       title: "Servizi",
@@ -178,10 +271,13 @@ export const adminMessages: Record<
       edit: "Modifica",
       deactivate: "Disattiva",
       reactivate: "Riattiva",
+      deletePermanently: "Elimina definitivamente",
+      confirmDeletePermanently: "Eliminare questo servizio? Non si può annullare. Se ha prenotazioni non è possibile.",
       sessionExpired: "Sessione scaduta. Effettua di nuovo l'accesso.",
       loadError: "Errore di caricamento",
       errorDeactivate: "Errore disattivazione",
       errorReactivate: "Errore riattivazione",
+      errorDeletePermanent: "Impossibile eliminare (ci sono prenotazioni). Disattiva il servizio.",
     },
     serviceForm: {
       editService: "Modifica servizio",
@@ -203,7 +299,8 @@ export const adminMessages: Record<
       documentsFr: "Documenti richiesti (FR)",
       documentsPlaceholder: "Separati da virgola o uno per riga",
       durationMin: "Durata (min) *",
-      priceCents: "Prezzo (centesimi) *",
+      priceCents: "Prezzo (€) *",
+      priceEurosHint: "Solo euro interi (es. 50 = 50 €)",
       currency: "Valuta *",
       active: "Attivo (visibile in sito)",
       activeHint: "Attivo (visibile in sito)",
@@ -230,9 +327,25 @@ export const adminMessages: Record<
       adminTitle: "Studio CAS Admin",
       navDashboard: "Dashboard",
       navAppointments: "Appointments",
+      navCreateAppointment: "Create appointment",
+      navClients: "Clients",
+      navContactHours: "Phone and hours",
       navServices: "Services",
       logout: "Log out",
       language: "Language",
+    },
+    siteContact: {
+      title: "Phone and hours",
+      description: "This information is shown on the Contact section of the website. Edit and save.",
+      phone: "Phone",
+      email: "Email",
+      hours: "Opening hours",
+      hoursPlaceholder: "E.g. Mon–Fri 9am–1pm, 2pm–6pm",
+      save: "Save",
+      saving: "Saving…",
+      success: "Changes saved.",
+      loadError: "Load error",
+      saveError: "Error saving",
     },
     dashboard: {
       title: "Dashboard",
@@ -249,6 +362,7 @@ export const adminMessages: Record<
     },
     appointments: {
       title: "Appointments",
+      createAppointment: "Create appointment (walk-in)",
       refresh: "Refresh",
       loading: "Loading…",
       noAppointments: "No appointments in the next 14 days.",
@@ -264,6 +378,35 @@ export const adminMessages: Record<
       note: "Showing appointments from today for the next 14 days.",
       sessionExpired: "Session expired. Please sign in again.",
       loadError: "Load error",
+      createTitle: "New appointment (client at office)",
+      createService: "Service",
+      createDate: "Date",
+      createTime: "Time",
+      createClientName: "Client name",
+      createClientEmail: "Email",
+      createClientPhone: "Phone",
+      createClientMessage: "Notes",
+      createSubmit: "Create appointment",
+      createSubmitting: "Creating…",
+      createSuccess: "Appointment created.",
+      createErrorSlot: "This slot is no longer available. Choose another time (red = already booked).",
+      createError: "Error creating appointment.",
+      slotBooked: "Booked",
+      selectDate: "Select date",
+      selectTime: "Select time",
+      noSlots: "No slots available on this date.",
+    },
+    clients: {
+      title: "Clients",
+      searchPlaceholder: "Search by name or email…",
+      name: "Name",
+      email: "Email",
+      phone: "Phone",
+      totalPaid: "Total paid",
+      appointments: "Appointments",
+      noClients: "No clients found.",
+      loadError: "Load error",
+      clientCount: "{count} clients",
     },
     services: {
       title: "Services",
@@ -282,10 +425,13 @@ export const adminMessages: Record<
       edit: "Edit",
       deactivate: "Deactivate",
       reactivate: "Reactivate",
+      deletePermanently: "Delete permanently",
+      confirmDeletePermanently: "Delete this service? This cannot be undone. If it has appointments, deletion is not allowed.",
       sessionExpired: "Session expired. Please sign in again.",
       loadError: "Load error",
       errorDeactivate: "Deactivation error",
       errorReactivate: "Reactivation error",
+      errorDeletePermanent: "Cannot delete (service has appointments). Deactivate it instead.",
     },
     serviceForm: {
       editService: "Edit service",
@@ -307,7 +453,8 @@ export const adminMessages: Record<
       documentsFr: "Required documents (FR)",
       documentsPlaceholder: "Comma-separated or one per line",
       durationMin: "Duration (min) *",
-      priceCents: "Price (cents) *",
+      priceCents: "Price (€) *",
+      priceEurosHint: "Whole euros only (e.g. 50 = 50 €)",
       currency: "Currency *",
       active: "Active (visible on site)",
       activeHint: "Active (visible on site)",

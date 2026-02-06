@@ -12,6 +12,8 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+export const dynamic = "force-dynamic";
+
 const locales = routing.locales as readonly string[];
 
 function isValidLocale(locale: string): locale is Locale {

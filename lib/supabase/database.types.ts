@@ -99,6 +99,18 @@ export interface Database {
         Insert: Omit<Database["public"]["Tables"]["appointments"]["Row"], "id" | "created_at" | "updated_at"> & { id?: string; created_at?: string; updated_at?: string };
         Update: Partial<Database["public"]["Tables"]["appointments"]["Insert"]>;
       };
+      site_contact: {
+        Row: {
+          id: string;
+          phone: string | null;
+          email: string | null;
+          hours: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database["public"]["Tables"]["site_contact"]["Row"], "id" | "created_at" | "updated_at"> & { id?: string; created_at?: string; updated_at?: string };
+        Update: Partial<Database["public"]["Tables"]["site_contact"]["Insert"]>;
+      };
     };
   };
 }

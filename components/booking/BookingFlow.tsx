@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { fetchServices, fetchSlots, createBooking } from "@/lib/api/client";
 import type { Service } from "@/lib/types";
 import type { AvailableSlot } from "@/lib/types";
@@ -13,11 +12,9 @@ import { DateSlotPicker } from "@/components/booking/DateSlotPicker";
 
 const LOCALES: readonly Locale[] = ["it", "en", "fr", "ar"];
 
-/** Derive locale from URL path (e.g. /ar/book → "ar"). Single source of truth for service labels. */
-function useLocaleFromPath(): Locale {
-  const pathname = usePathname();
-  const segment = pathname?.split("/")[1] ?? "";
-  return (LOCALES.includes(segment as Locale) ? segment : "it") as Locale;
+function useBookingLocale(): Locale {
+  const locale = useLocale();
+  return (LOCALES.includes(locale as Locale) ? locale : "it") as Locale;
 }
 
 type Step = 1 | 2 | 3 | 4 | 5;
@@ -38,7 +35,7 @@ type BookingFlowProps = { preselectedServiceId?: string };
 
 export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
   const t = useTranslations("book");
-  const locale = useLocaleFromPath();
+  const locale = useBookingLocale();
   const [step, setStep] = useState<Step>(1);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,6 +45,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
   const [consultationType, setConsultationType] = useState<"in_person" | "online" | null>(null);
   const [date, setDate] = useState<string>("");
   const [slots, setSlots] = useState<AvailableSlot[]>([]);
+  const [bookedSlots, setBookedSlots] = useState<AvailableSlot[]>([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [slotsError, setSlotsError] = useState<string | null>(null);
   const [startAt, setStartAt] = useState<string | null>(null);
@@ -87,10 +85,12 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
     setSlotsLoading(true);
     setSlotsError(null);
     setSlots([]);
+    setBookedSlots([]);
     setStartAt(null);
     try {
-      const res = await fetchSlots(date, serviceId);
+      const res = await fetchSlots(date, serviceId, { includeBooked: true });
       setSlots(res.slots);
+      setBookedSlots(res.bookedSlots ?? []);
     } catch {
       setSlotsError(t("errorSlots"));
     } finally {
@@ -118,7 +118,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!serviceId || !consultationType || !startAt || !name.trim() || !email.trim() || !message.trim()) return;
+    if (!serviceId || !consultationType || !startAt || !name.trim() || !email.trim() || !phone.trim() || !message.trim()) return;
     setSubmitting(true);
     setSubmitError(null);
     try {
@@ -128,7 +128,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
         startAt,
         clientName: name.trim(),
         clientEmail: email.trim().toLowerCase(),
-        clientPhone: phone.trim() || undefined,
+        clientPhone: phone.trim(),
         clientMessage: message.trim() || undefined,
         locale: locale as string,
       });
@@ -238,6 +238,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
               selectedDate={date}
               onSelectDate={setDate}
               slots={slots}
+              bookedSlots={bookedSlots}
               slotsLoading={slotsLoading}
               slotsError={slotsError}
               selectedStartAt={startAt}
@@ -251,6 +252,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
                 loading: t("submitting"),
                 noSlots: t("noSlots"),
                 error: t("errorSlots"),
+                slotBooked: t("slotBooked"),
                 weekdays: weekdayLabels,
               }}
             />
@@ -284,9 +286,10 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700">{t("phone")}</label>
+              <label className="block text-sm font-medium text-stone-700">{t("phone")} *</label>
               <input
                 type="tel"
+                required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2 text-stone-900"

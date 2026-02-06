@@ -68,10 +68,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
-  const { roomId, roomUrl } = await createVideoRoom({
-    appointmentId,
-    clientName: apt.client_name,
-  });
+  const isOnline = apt.consultation_type === "online";
+  let roomId: string | null = null;
+  let roomUrl: string | null = null;
+  if (isOnline) {
+    const room = await createVideoRoom({
+      appointmentId,
+      clientName: apt.client_name,
+    });
+    roomId = room.roomId;
+    roomUrl = room.roomUrl;
+  }
 
   const { error: updateError } = await supabase
     .from("appointments")

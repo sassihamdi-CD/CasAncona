@@ -3,8 +3,18 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/Button";
 import { HeroSlider } from "@/components/landing/HeroSlider";
 import { IconCalendar, IconPayment, IconVideo } from "@/components/icons/ServiziIcons";
+import { getSupabaseAdmin } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/database.types";
+import { mapService } from "@/lib/db/map";
+import type { Service } from "@/lib/types";
+import { getServiceName, getServiceDescription, getServiceDocumentsRequired } from "@/lib/i18n/service";
+import type { Locale } from "@/lib/i18n/service";
+import { ServiceCard } from "@/components/ui/ServiceCard";
 
 type Props = { params: Promise<{ locale: string }> };
+type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
+
+export const dynamic = "force-dynamic";
 
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
@@ -12,8 +22,17 @@ export default async function HomePage({ params }: Props) {
   const t = await getTranslations("home");
   const tAteco = await getTranslations("ateco");
   const tCommon = await getTranslations("common");
+  const safeLocale = locale as Locale;
 
   const typicalActivities = tAteco.raw("typicalActivities") as string[];
+
+  const supabase = getSupabaseAdmin();
+  const { data: rows } = await supabase
+    .from("services")
+    .select("*")
+    .eq("active", true)
+    .order("sort_order", { ascending: true });
+  const services: Service[] = (rows ?? []).map((row) => mapService(row as ServiceRow));
 
   return (
     <>
@@ -89,18 +108,32 @@ export default async function HomePage({ params }: Props) {
                 <span className="font-medium text-stone-700">{t("section2.videoConsulenza")}</span>
               </li>
             </ul>
-            <div className="mt-10 rounded-2xl border border-primary/15 bg-primary/[0.04] p-8 shadow-sm sm:p-10 text-center">
-              <p className="text-stone-600 text-lg">{t("section2.placeholder")}</p>
-              <p className="mt-2 text-sm text-stone-500">{t("section2.placeholderHint")}</p>
-              <div className="mt-6 flex flex-wrap justify-center gap-4">
-                <Button href="/book" variant="primary" size="md">
-                  {tCommon("buttons.bookConsultation")}
-                </Button>
-                <Button href="/contatti" variant="outline" size="md">
-                  {tCommon("buttons.contact")}
-                </Button>
+            {services.length > 0 ? (
+              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {services.map((service) => (
+                  <ServiceCard
+                    key={`${service.id}-${locale}`}
+                    service={service}
+                    displayName={getServiceName(service, safeLocale)}
+                    displayDescription={getServiceDescription(service, safeLocale)}
+                    displayDocumentsRequired={getServiceDocumentsRequired(service, safeLocale)}
+                  />
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="mt-10 rounded-2xl border border-primary/15 bg-primary/[0.04] p-8 shadow-sm sm:p-10 text-center">
+                <p className="text-stone-600 text-lg">{t("section2.placeholder")}</p>
+                <p className="mt-2 text-sm text-stone-500">{t("section2.placeholderHint")}</p>
+                <div className="mt-6 flex flex-wrap justify-center gap-4">
+                  <Button href="/book" variant="primary" size="md">
+                    {tCommon("buttons.bookConsultation")}
+                  </Button>
+                  <Button href="/contatti" variant="outline" size="md">
+                    {tCommon("buttons.contact")}
+                  </Button>
+                </div>
+              </div>
+            )}
             <p className="mt-6 text-center">
               <Link
                 href="/servizi"

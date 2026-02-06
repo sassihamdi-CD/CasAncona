@@ -16,7 +16,7 @@ export default function middleware(request: NextRequest) {
       return NextResponse.next();
     }
     if (path === "/admin" || path === "/admin/") {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+      return NextResponse.next();
     }
     const token = request.cookies.get(COOKIE_NAME)?.value;
     if (!token) {

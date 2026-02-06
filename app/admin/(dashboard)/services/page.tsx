@@ -73,6 +73,29 @@ export default function AdminServicesPage() {
     [load, t]
   );
 
+  const handleDeletePermanently = useCallback(
+    async (s: Service) => {
+      if (!window.confirm(t("services.confirmDeletePermanently"))) return;
+      setError(null);
+      try {
+        const res = await fetch(`/api/admin/services/${s.id}?permanent=true`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        if (res.ok) {
+          load();
+          return;
+        }
+        const data = await res.json().catch(() => ({}));
+        const message = (data as { message?: string })?.message ?? t("services.errorDeletePermanent");
+        setError(message);
+      } catch {
+        setError(t("services.errorDeletePermanent"));
+      }
+    },
+    [load, t]
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -122,9 +145,9 @@ export default function AdminServicesPage() {
                   <td className="px-4 py-3 text-stone-700">{s.sortOrder}</td>
                   <td className="px-4 py-3 text-stone-700">{s.durationMinutes} min</td>
                   <td className="px-4 py-3 text-stone-700">
-                    {(s.priceCents / 100).toFixed(2)} {s.currency}
+                    {Math.round(s.priceCents / 100)} {s.currency}
                   </td>
-                  <td className="px-4 py-3 flex gap-2">
+                  <td className="px-4 py-3 flex flex-wrap gap-2">
                     <button
                       type="button"
                       onClick={() => setServiceForm(s)}
@@ -149,6 +172,13 @@ export default function AdminServicesPage() {
                         {t("services.reactivate")}
                       </button>
                     )}
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePermanently(s)}
+                      className="text-red-600 underline hover:text-red-700"
+                    >
+                      {t("services.deletePermanently")}
+                    </button>
                   </td>
                 </tr>
               ))}

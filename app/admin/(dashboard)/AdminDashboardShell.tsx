@@ -6,8 +6,11 @@ import { useState } from "react";
 import { useAdminLocale } from "../AdminLocaleProvider";
 
 const navKeys = [
-  { href: "/admin/dashboard", key: "shell.navDashboard", icon: "📊" },
+  { href: "/admin", key: "shell.navDashboard", icon: "📊" },
   { href: "/admin/appointments", key: "shell.navAppointments", icon: "📅" },
+  { href: "/admin/create-appointment", key: "shell.navCreateAppointment", icon: "➕" },
+  { href: "/admin/clients", key: "shell.navClients", icon: "👥" },
+  { href: "/admin/contact-hours", key: "shell.navContactHours", icon: "📞" },
   { href: "/admin/services", key: "shell.navServices", icon: "⚙️" },
 ] as const;
 

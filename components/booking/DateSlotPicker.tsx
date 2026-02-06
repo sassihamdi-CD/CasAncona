@@ -9,8 +9,10 @@ type DateSlotPickerProps = {
   /** Selected date YYYY-MM-DD */
   selectedDate: string;
   onSelectDate: (date: string) => void;
-  /** Slots for the selected date */
+  /** Slots for the selected date (available = clickable) */
   slots: AvailableSlot[];
+  /** Occupied slots for the same date (shown in red, disabled). Keeps admin/public 100% in sync. */
+  bookedSlots?: AvailableSlot[];
   slotsLoading: boolean;
   slotsError: string | null;
   /** Selected slot startAt (ISO) */
@@ -25,6 +27,8 @@ type DateSlotPickerProps = {
     loading: string;
     noSlots: string;
     error: string;
+    /** Shown for booked (unavailable) slots. Optional. */
+    slotBooked?: string;
     /** Optional: Mon–Sun short labels (Monday first). Default: Italian. */
     weekdays?: string[];
   };
@@ -63,6 +67,7 @@ export function DateSlotPicker({
   selectedDate,
   onSelectDate,
   slots,
+  bookedSlots = [],
   slotsLoading,
   slotsError,
   selectedStartAt,
@@ -76,6 +81,18 @@ export function DateSlotPicker({
   const maxStr = toYYYYMMDD(maxDate);
   const weekdayLabels = labels.weekdays ?? ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
   const dateLocale = toDateLocale(locale);
+
+  /** Merge available + booked, sort by time; each has available: boolean for styling. */
+  const allSlots = useMemo(() => {
+    const byStart = new Map<string, { slot: AvailableSlot; available: boolean }>();
+    slots.forEach((s) => byStart.set(s.startAt, { slot: s, available: true }));
+    bookedSlots.forEach((s) => {
+      if (!byStart.has(s.startAt)) byStart.set(s.startAt, { slot: s, available: false });
+    });
+    return Array.from(byStart.values()).sort((a, b) =>
+      a.slot.startAt.localeCompare(b.slot.startAt)
+    );
+  }, [slots, bookedSlots]);
 
   const initialViewDate = selectedDate
     ? new Date(selectedDate + "T12:00:00")
@@ -205,12 +222,26 @@ export function DateSlotPicker({
             <p className="py-6 text-center text-sm text-stone-500">{labels.loading}</p>
           ) : slotsError ? (
             <p className="py-4 text-sm text-red-600">{labels.error}</p>
-          ) : slots.length === 0 ? (
+          ) : allSlots.length === 0 ? (
             <p className="py-6 text-center text-sm text-stone-500">{labels.noSlots}</p>
           ) : (
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
-              {slots.map((slot) => {
-                const selected = selectedStartAt === slot.startAt;
+              {allSlots.map(({ slot, available }) => {
+                const selected = available && selectedStartAt === slot.startAt;
+                const bookedLabel = labels.slotBooked;
+                if (!available) {
+                  return (
+                    <button
+                      key={slot.startAt}
+                      type="button"
+                      disabled
+                      title={bookedLabel ?? undefined}
+                      className="cursor-not-allowed rounded-lg border-2 border-red-200 bg-red-50 py-2.5 text-sm font-medium text-red-700"
+                    >
+                      {formatSlotTime(slot.startAt)}
+                    </button>
+                  );
+                }
                 return (
                   <button
                     key={slot.startAt}

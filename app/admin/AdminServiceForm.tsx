@@ -201,12 +201,15 @@ export function AdminServiceForm({ service, onClose, onSaved, adminKey }: Props)
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700">{t("serviceForm.priceCents")}</label>
+              <p className="mt-0.5 text-xs text-stone-500">{t("serviceForm.priceEurosHint")}</p>
               <input
                 type="number"
                 min={0}
+                step={1}
                 required
-                value={form.priceCents}
-                onChange={(e) => update({ priceCents: Number(e.target.value) || 0 })}
+                placeholder="50"
+                value={form.priceCents === 0 ? 0 : Math.round(form.priceCents / 100)}
+                onChange={(e) => update({ priceCents: (Number(e.target.value) || 0) * 100 })}
                 className="mt-1 w-full rounded border border-stone-300 px-3 py-2 text-stone-900"
               />
             </div>

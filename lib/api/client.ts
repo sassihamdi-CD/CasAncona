@@ -42,9 +42,11 @@ export async function fetchService(id: string): Promise<GetServiceResponse> {
 
 export async function fetchSlots(
   date: string,
-  serviceId: string
+  serviceId: string,
+  options?: { includeBooked?: boolean }
 ): Promise<GetSlotsResponse> {
   const params = new URLSearchParams({ date, serviceId });
+  if (options?.includeBooked) params.set("includeBooked", "true");
   const res = await fetch(`${getBaseUrl()}/api/slots?${params}`);
   return handleResponse<GetSlotsResponse>(res);
 }

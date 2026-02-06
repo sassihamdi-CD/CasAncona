@@ -12,7 +12,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/server";
 import { mapService, serviceToDbUpdate } from "@/lib/db/map";
 import type { ServiceRow } from "@/lib/db/map";
 import { requireAdminAuth } from "@/lib/auth/admin";
-import { unauthorized, serverError, notFound, badRequest } from "@/lib/api/response";
+import { unauthorized, serverError, notFound, badRequest, conflict } from "@/lib/api/response";
 import type {
   GetAdminServiceResponse,
   PatchAdminServiceBody,
@@ -118,12 +118,45 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
-  if (!requireAdminAuth(_request)) return unauthorized();
+export async function DELETE(request: NextRequest, context: RouteContext) {
+  if (!requireAdminAuth(request)) return unauthorized();
 
   const { id } = await context.params;
+  const url = new URL(request.url);
+  const permanent = url.searchParams.get("permanent") === "true";
+
+  const supabase = getSupabaseAdmin();
+
+  if (permanent) {
+    try {
+      const { count, error: countError } = await supabase
+        .from("appointments")
+        .select("id", { count: "exact", head: true })
+        .eq("service_id", id);
+
+      if (countError) {
+        console.error("[api/admin/services/[id]] DELETE count", countError);
+        return serverError();
+      }
+      if ((count ?? 0) > 0) {
+        return conflict("Cannot delete: this service has appointments. Deactivate it instead.");
+      }
+
+      const { error } = await supabase.from("services").delete().eq("id", id);
+
+      if (error) {
+        console.error("[api/admin/services/[id]] DELETE permanent", error);
+        return serverError();
+      }
+      return NextResponse.json({ deleted: true });
+    } catch (e) {
+      console.error("[api/admin/services/[id]] DELETE permanent", e);
+      return serverError();
+    }
+  }
+
   try {
-    const { data, error } = await getSupabaseAdmin()
+    const { data, error } = await supabase
       .from("services")
       // @ts-expect-error Supabase generated type is overly strict for partial update
       .update({ active: false })

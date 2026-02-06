@@ -1,6 +1,6 @@
 /**
  * POST /api/booking — create appointment (pending_payment) and return Stripe Checkout URL.
- * Body: serviceId, startAt (ISO UTC), clientName, clientEmail, clientPhone?, clientMessage?
+ * Body: serviceId, startAt (ISO UTC), clientName, clientEmail, clientPhone (required), clientMessage?
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -10,8 +10,7 @@ import type { Database } from "@/lib/supabase/database.types";
 import { getAvailableSlots } from "@/lib/slots/compute";
 import { badRequest, conflict, notFound, serverError } from "@/lib/api/response";
 import type { CreateBookingBody, CreateBookingResponse } from "@/lib/types";
-import { AppointmentStatus, ConsultationType } from "@/lib/types";
-import { sendBookingConfirmationEmail } from "@/lib/notifications";
+import { AppointmentStatus } from "@/lib/types";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -30,7 +29,9 @@ function validateBody(body: unknown): body is CreateBookingBody {
     typeof b.clientName === "string" &&
     b.clientName.trim().length > 0 &&
     typeof b.clientEmail === "string" &&
-    b.clientEmail.trim().length > 0
+    b.clientEmail.trim().length > 0 &&
+    typeof b.clientPhone === "string" &&
+    b.clientPhone.trim().length > 0
   );
 }
 
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!validateBody(body)) {
-      return badRequest("Missing or invalid fields: serviceId, consultationType (in_person|online), startAt, clientName, clientEmail");
+      return badRequest("Missing or invalid fields: serviceId, consultationType (in_person|online), startAt, clientName, clientEmail, clientPhone");
     }
 
     const { serviceId, consultationType, startAt, clientName, clientEmail, clientPhone, clientMessage } = body;
@@ -74,8 +75,6 @@ export async function POST(request: NextRequest) {
     }
 
     const durationMinutes = svc.duration_minutes;
-    const isInPerson = consultationType === ConsultationType.IN_PERSON;
-    const initialStatus = isInPerson ? AppointmentStatus.CONFIRMED : AppointmentStatus.PENDING_PAYMENT;
 
     const { data: appointment, error: insertError } = await supabase
       .from("appointments")
@@ -85,16 +84,19 @@ export async function POST(request: NextRequest) {
         consultation_type: consultationType,
         client_name: clientName.trim(),
         client_email: clientEmail.trim().toLowerCase(),
-        client_phone: clientPhone?.trim() || null,
+        client_phone: clientPhone.trim(),
         client_message: clientMessage?.trim() || null,
         requested_start_at: startAt,
         duration_minutes: durationMinutes,
-        status: initialStatus,
+        status: AppointmentStatus.PENDING_PAYMENT,
       } as never)
       .select("id")
       .single();
 
     if (insertError || !appointment) {
+      if ((insertError as { code?: string } | null)?.code === "23505") {
+        return conflict("Slot no longer available");
+      }
       console.error("[api/booking] insert error:", insertError);
       return serverError();
     }
@@ -104,25 +106,7 @@ export async function POST(request: NextRequest) {
     const locale = (body as CreateBookingBody).locale ?? "it";
     const localePrefix = locale ? `/${locale}` : "";
 
-    // In-person: free, no payment — return confirmation page URL and send confirmation email
-    if (isInPerson) {
-      sendBookingConfirmationEmail({
-        to: clientEmail.trim().toLowerCase(),
-        clientName: clientName.trim(),
-        serviceName: svc.name,
-        requestedStartAt: startAt,
-        videoRoomUrl: null,
-      }).catch((e) => console.error("[api/booking] in-person email failed:", e));
-      return NextResponse.json(
-        {
-          appointmentId: apt.id,
-          confirmationUrl: `${baseUrl}${localePrefix}/booking/confirm?appointment_id=${apt.id}`,
-        } satisfies CreateBookingResponse,
-        { status: 201 }
-      );
-    }
-
-    // Online: paid — create Stripe Checkout and return checkout URL
+    // Both in-person and online: paid via Stripe (prices set per service in admin)
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeSecretKey) {
       return NextResponse.json(

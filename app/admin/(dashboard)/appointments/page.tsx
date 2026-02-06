@@ -78,7 +78,7 @@ export default function AdminAppointmentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-2xl font-bold text-stone-900">{t("appointments.title")}</h1>
         <button
           type="button"
