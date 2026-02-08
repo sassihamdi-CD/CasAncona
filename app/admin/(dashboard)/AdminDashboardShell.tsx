@@ -11,6 +11,7 @@ const navKeys = [
   { href: "/admin/create-appointment", key: "shell.navCreateAppointment", icon: "➕" },
   { href: "/admin/clients", key: "shell.navClients", icon: "👥" },
   { href: "/admin/contact-hours", key: "shell.navContactHours", icon: "📞" },
+  { href: "/admin/telegram", key: "shell.navTelegram", icon: "✈️" },
   { href: "/admin/services", key: "shell.navServices", icon: "⚙️" },
 ] as const;
 

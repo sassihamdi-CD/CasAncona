@@ -126,12 +126,16 @@ export async function POST(request: NextRequest) {
       .eq("id", apt.assigned_staff_id)
       .single();
     const staffRow = staff as StaffRow | null;
-    if (staffRow?.telegram_chat_id && roomUrl) {
+    if (staffRow?.telegram_chat_id) {
       await notifyLawyerTelegram({
         telegramChatId: staffRow.telegram_chat_id,
         clientName: apt.client_name,
+        clientPhone: apt.client_phone ?? null,
         serviceName,
         requestedStartAt: apt.requested_start_at,
+        amountPaidCents: session.amount_total ?? null,
+        currency: session.currency ?? null,
+        consultationType: apt.consultation_type === "online" ? "online" : "in_person",
         videoRoomUrl: roomUrl,
       });
     }

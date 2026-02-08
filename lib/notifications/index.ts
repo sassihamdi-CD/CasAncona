@@ -80,14 +80,37 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Format amount for display (e.g. 10000 cents + eur → "100,00 €") */
+function formatAmount(cents: number | null, currency: string): string {
+  if (cents == null) return "—";
+  const amount = (cents / 100).toFixed(2).replace(".", ",");
+  const c = (currency || "eur").toUpperCase();
+  if (c === "EUR") return `${amount} €`;
+  return `${amount} ${c}`;
+}
+
 export async function notifyLawyerTelegram(params: {
   telegramChatId: string;
   clientName: string;
+  clientPhone: string | null;
   serviceName: string;
   requestedStartAt: string;
-  videoRoomUrl: string;
+  amountPaidCents: number | null;
+  currency: string | null;
+  consultationType: "online" | "in_person";
+  videoRoomUrl: string | null;
 }): Promise<void> {
-  const { telegramChatId, clientName, serviceName, requestedStartAt, videoRoomUrl } = params;
+  const {
+    telegramChatId,
+    clientName,
+    clientPhone,
+    serviceName,
+    requestedStartAt,
+    amountPaidCents,
+    currency,
+    consultationType,
+    videoRoomUrl,
+  } = params;
   const token = process.env.TELEGRAM_BOT_TOKEN;
 
   if (!token) {
@@ -96,15 +119,26 @@ export async function notifyLawyerTelegram(params: {
   }
 
   const dateTime = formatDateTime(requestedStartAt);
-  const text = [
-    "📅 Nuova prenotazione confermata",
+  const amountStr = formatAmount(amountPaidCents, currency ?? "eur");
+  const typeLabel = consultationType === "online" ? "Online" : "In sede";
+
+  const lines = [
+    "📅 Nuova prenotazione confermata (pagata)",
     "",
-    `Cliente: ${clientName}`,
-    `Servizio: ${serviceName}`,
-    `Quando: ${dateTime}`,
-    "",
-    `🔗 Video: ${videoRoomUrl}`,
-  ].join("\n");
+    `👤 Cliente: ${clientName}`,
+    clientPhone ? `📞 Tel: ${clientPhone}` : null,
+    `📋 Servizio: ${serviceName}`,
+    `🕐 Quando: ${dateTime}`,
+    `💰 Importo: ${amountStr}`,
+    `📍 Tipo: ${typeLabel}`,
+  ].filter(Boolean) as string[];
+
+  if (videoRoomUrl) {
+    lines.push("");
+    lines.push(`🔗 Video: ${videoRoomUrl}`);
+  }
+
+  const text = lines.join("\n");
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {

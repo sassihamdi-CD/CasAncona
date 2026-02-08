@@ -27,6 +27,7 @@ export const adminMessages: Record<
       navClients: string;
       navContactHours: string;
       navServices: string;
+      navTelegram: string;
       logout: string;
       language: string;
     };
@@ -120,6 +121,23 @@ export const adminMessages: Record<
       saving: string;
       recordError: string;
     };
+    telegram: {
+      title: string;
+      description: string;
+      step1: string;
+      step2: string;
+      fetchChatIds: string;
+      noToken: string;
+      noChats: string;
+      linkToStaff: string;
+      staff: string;
+      currentChatId: string;
+      save: string;
+      saving: string;
+      saved: string;
+      error: string;
+      loadStaffError: string;
+    };
     clients: {
       title: string;
       searchPlaceholder: string;
@@ -208,6 +226,7 @@ export const adminMessages: Record<
       navClients: "Clienti",
       navContactHours: "Telefono e orari",
       navServices: "Servizi",
+      navTelegram: "Telegram",
       logout: "Esci",
       language: "Lingua",
     },
@@ -301,6 +320,23 @@ export const adminMessages: Record<
       saving: "Salvataggio…",
       recordError: "Errore durante il salvataggio.",
     },
+    telegram: {
+      title: "Notifiche Telegram",
+      description: "Configurazione una tantum: collega l'account Telegram dell'avvocato al bot. Da quel momento l'avvocato riceverà su Telegram (telefono o desktop) ogni prenotazione pagata: nome e telefono cliente, importo, servizio, data/ora, online o in sede, e link video se online.",
+      step1: "L'avvocato invia un messaggio qualsiasi al bot (es. /start).",
+      step2: "Clicca «Recupera chat» per vedere gli ID degli utenti che hanno scritto al bot.",
+      fetchChatIds: "Recupera chat",
+      noToken: "TELEGRAM_BOT_TOKEN non impostato. Aggiungilo in Vercel (o .env) per usare Telegram.",
+      noChats: "Nessuna chat trovata. Chiedi all'avvocato di inviare un messaggio al bot e riprova.",
+      linkToStaff: "Assegna l'ID chat a un membro dello staff:",
+      staff: "Staff",
+      currentChatId: "Chat ID attuale",
+      save: "Salva",
+      saving: "Salvataggio…",
+      saved: "Salvato.",
+      error: "Errore.",
+      loadStaffError: "Errore caricamento staff.",
+    },
     clients: {
       title: "Clienti",
       searchPlaceholder: "Cerca per nome o email…",
@@ -390,6 +426,7 @@ export const adminMessages: Record<
       navClients: "Clients",
       navContactHours: "Phone and hours",
       navServices: "Services",
+      navTelegram: "Telegram",
       logout: "Log out",
       language: "Language",
     },
@@ -482,6 +519,23 @@ export const adminMessages: Record<
       saveAndShowReceipt: "Save and show receipt",
       saving: "Saving…",
       recordError: "Error saving.",
+    },
+    telegram: {
+      title: "Telegram notifications",
+      description: "One-time setup: link the lawyer's Telegram account to the bot. After that, the lawyer receives on Telegram (phone or desktop) every paid booking: client name and phone, amount paid, service, date/time, online or in person, and video link if online.",
+      step1: "The lawyer sends any message to the bot (e.g. /start).",
+      step2: "Click «Fetch chat IDs» to see IDs of users who messaged the bot.",
+      fetchChatIds: "Fetch chat IDs",
+      noToken: "TELEGRAM_BOT_TOKEN is not set. Add it in Vercel (or .env) to use Telegram.",
+      noChats: "No chats found. Ask the lawyer to send a message to the bot and try again.",
+      linkToStaff: "Assign the chat ID to a staff member:",
+      staff: "Staff",
+      currentChatId: "Current chat ID",
+      save: "Save",
+      saving: "Saving…",
+      saved: "Saved.",
+      error: "Error.",
+      loadStaffError: "Error loading staff.",
     },
     clients: {
       title: "Clients",

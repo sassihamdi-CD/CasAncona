@@ -11,6 +11,8 @@ import { requireAdminAuth } from "@/lib/auth/admin";
 import { unauthorized, notFound, badRequest, serverError } from "@/lib/api/response";
 import type { GetAdminAppointmentResponse, PatchAdminAppointmentBody } from "@/lib/types";
 import { AppointmentStatus } from "@/lib/types";
+import { notifyLawyerTelegram } from "@/lib/notifications";
+import type { Database } from "@/lib/supabase/database.types";
 
 const VALID_STATUSES = new Set([
   AppointmentStatus.CONFIRMED,
@@ -100,7 +102,43 @@ export async function PATCH(
       return serverError();
     }
 
-    return NextResponse.json({ appointment: mapAppointment(data as AppointmentRow) });
+    const updated = data as AppointmentRow;
+
+    // When recording in-person payment, notify the lawyer on Telegram
+    if (
+      b.amountPaidCents !== undefined &&
+      typeof b.amountPaidCents === "number" &&
+      b.amountPaidCents > 0 &&
+      updated.assigned_staff_id
+    ) {
+      const { data: staff } = await supabase
+        .from("staff")
+        .select("telegram_chat_id")
+        .eq("id", updated.assigned_staff_id)
+        .single();
+      const staffRow = staff as Database["public"]["Tables"]["staff"]["Row"] | null;
+      if (staffRow?.telegram_chat_id) {
+        const { data: svc } = await supabase
+          .from("services")
+          .select("name")
+          .eq("id", updated.service_id)
+          .single();
+        const serviceName = (svc as { name?: string } | null)?.name ?? "Consultation";
+        await notifyLawyerTelegram({
+          telegramChatId: staffRow.telegram_chat_id,
+          clientName: updated.client_name,
+          clientPhone: updated.client_phone ?? null,
+          serviceName,
+          requestedStartAt: updated.requested_start_at,
+          amountPaidCents: updated.amount_paid_cents,
+          currency: updated.currency ?? null,
+          consultationType: updated.consultation_type === "online" ? "online" : "in_person",
+          videoRoomUrl: updated.video_room_url ?? null,
+        });
+      }
+    }
+
+    return NextResponse.json({ appointment: mapAppointment(updated) });
   } catch (e) {
     console.error("[api/admin/appointments/[id]] PATCH", e);
     return serverError();
