@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function AdminPassportViewPage() {
   const params = useParams();
   const { t } = useAdminLocale();
-  const id = typeof params.id === "string" ? params.id : null;
+  const id = typeof params?.id === "string" ? params.id : null;
   const [url, setUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);

@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
       .update({
         passport_document_path: storagePath,
         updated_at: new Date().toISOString(),
-      })
+      } as never)
       .eq("id", apt.id);
 
     const baseUrl = request.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
       .update({
         stripe_session_id: session.id,
         updated_at: new Date().toISOString(),
-      })
+      } as never)
       .eq("id", apt.id);
 
     const checkoutUrl =

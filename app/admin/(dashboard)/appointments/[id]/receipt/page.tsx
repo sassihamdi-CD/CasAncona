@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAdminLocale } from "../../../../AdminLocaleProvider";
 import Link from "next/link";
 import { OFFICE_ADDRESS_LINE, STUDIO_LEGAL_NAME } from "@/lib/constants/office";
@@ -42,14 +42,14 @@ function formatAmount(cents: number | null, currency: string): string {
 export default function AdminReceiptPage() {
   const params = useParams();
   const { t, locale } = useAdminLocale();
-  const id = typeof params.id === "string" ? params.id : null;
+  const id = typeof params?.id === "string" ? params.id : null;
   const [data, setData] = useState<ReceiptData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [recordSaving, setRecordSaving] = useState(false);
   const [recordError, setRecordError] = useState<string | null>(null);
 
-  const loadReceipt = async () => {
+  const loadReceipt = useCallback(async () => {
     if (!id) return;
     try {
       const res = await fetch(`/api/admin/appointments/${id}/receipt`, {
@@ -66,7 +66,7 @@ export default function AdminReceiptPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     if (!id) {
@@ -75,7 +75,7 @@ export default function AdminReceiptPage() {
       return;
     }
     loadReceipt();
-  }, [id]);
+  }, [id, loadReceipt]);
 
   const handlePrint = () => {
     window.print();
