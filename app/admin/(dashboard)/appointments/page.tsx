@@ -119,6 +119,12 @@ export default function AdminAppointmentsPage() {
                     <span className="font-medium text-stone-900">{apt.clientName}</span>
                     <br />
                     <span className="text-stone-500">{apt.clientEmail}</span>
+                    {apt.clientPhone && (
+                      <>
+                        <br />
+                        <span className="text-stone-500">{apt.clientPhone}</span>
+                      </>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-stone-700">{serviceName(apt.serviceId)}</td>
                   <td className="px-4 py-3 text-stone-700">

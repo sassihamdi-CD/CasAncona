@@ -9,6 +9,7 @@ import { getServiceName } from "@/lib/i18n/service";
 import type { Locale } from "@/lib/i18n/service";
 import { Button } from "@/components/ui/Button";
 import { DateSlotPicker } from "@/components/booking/DateSlotPicker";
+import { PHONE_COUNTRY_CODES_SORTED } from "@/lib/constants/phone-country-codes";
 
 const LOCALES: readonly Locale[] = ["it", "en", "fr", "ar"];
 
@@ -52,6 +53,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneCountryCode, setPhoneCountryCode] = useState("39");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -128,7 +130,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
         startAt,
         clientName: name.trim(),
         clientEmail: email.trim().toLowerCase(),
-        clientPhone: phone.trim(),
+        clientPhone: `+${phoneCountryCode} ${phone.trim().replace(/\s/g, "")}`,
         clientMessage: message.trim() || undefined,
         locale: locale as string,
       });
@@ -205,13 +207,14 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
             <button
               type="button"
               onClick={() => { setConsultationType("in_person"); setStep(3); }}
-              className={`rounded-lg border-2 px-6 py-3 font-medium transition-colors ${
+              className={`rounded-lg border-2 px-6 py-3 font-medium transition-colors text-left ${
                 consultationType === "in_person"
                   ? "border-primary bg-primary/5 text-primary"
                   : "border-stone-200 hover:border-primary/30"
               }`}
             >
-              {t("inPerson")}
+              <span className="block">{t("inPerson")}</span>
+              <span className="mt-0.5 block text-sm font-normal opacity-90">{t("inPersonPrice")}</span>
             </button>
             <button
               type="button"
@@ -287,13 +290,29 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700">{t("phone")} *</label>
-              <input
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2 text-stone-900"
-              />
+              <div className="mt-1 flex flex-wrap gap-2">
+                <select
+                  value={phoneCountryCode}
+                  onChange={(e) => setPhoneCountryCode(e.target.value)}
+                  className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-900 min-w-[8rem] focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  aria-label={t("phoneCountryCode")}
+                >
+                  {PHONE_COUNTRY_CODES_SORTED.map(({ code, country }) => (
+                    <option key={code} value={code}>
+                      +{code} {country}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder={t("phonePlaceholder")}
+                  className="flex-1 min-w-[10rem] rounded-lg border border-stone-200 px-3 py-2 text-stone-900 placeholder:text-stone-400"
+                  aria-label={t("phoneNumber")}
+                />
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-stone-700">{t("reasonForBooking")}</label>

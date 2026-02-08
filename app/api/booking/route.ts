@@ -17,6 +17,9 @@ const UUID_REGEX =
 
 const CONSULTATION_TYPES = ["in_person", "online"] as const;
 
+/** In-person at office: fixed 100 €, paid in advance (lawyer requirement). */
+const IN_PERSON_PRICE_CENTS = 10000;
+
 function validateBody(body: unknown): body is CreateBookingBody {
   if (!body || typeof body !== "object") return false;
   const b = body as Record<string, unknown>;
@@ -102,7 +105,8 @@ export async function POST(request: NextRequest) {
     }
 
     const apt = appointment as { id: string };
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? request.nextUrl.origin;
+    // Use request origin so redirect goes to the same port/host the user is on (avoids -102 when .env has different port)
+    const baseUrl = request.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const locale = (body as CreateBookingBody).locale ?? "it";
     const localePrefix = locale ? `/${locale}` : "";
 
@@ -119,7 +123,10 @@ export async function POST(request: NextRequest) {
     }
 
     const stripe = new Stripe(stripeSecretKey);
-    const stripePriceId = svc.stripe_price_id;
+    const isInPerson = consultationType === "in_person";
+    const stripePriceId = !isInPerson ? svc.stripe_price_id : null;
+    const amountCents = isInPerson ? IN_PERSON_PRICE_CENTS : svc.price_cents;
+    const productName = isInPerson ? `Consulenza in sede — ${svc.name}` : svc.name;
 
     const lineItem: Stripe.Checkout.SessionCreateParams["line_items"] = [{
       quantity: 1,
@@ -128,9 +135,9 @@ export async function POST(request: NextRequest) {
         : {
             price_data: {
               currency: (svc.currency ?? "eur").toLowerCase(),
-              unit_amount: svc.price_cents,
+              unit_amount: amountCents,
               product_data: {
-                name: svc.name,
+                name: productName,
                 description: svc.description ?? undefined,
               },
             },

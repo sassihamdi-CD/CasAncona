@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const { data: rows, error } = await getSupabaseAdmin()
       .from("appointments")
       .select("client_name, client_email, client_phone, amount_paid_cents, currency, requested_start_at")
-      .in("status", ["confirmed", "completed"])
+      .in("status", ["confirmed", "completed", "pending_payment"])
       .order("requested_start_at", { ascending: false });
 
     if (error) {
