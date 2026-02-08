@@ -120,6 +120,36 @@ Note: the triggered event may not contain your real `appointment_id` in metadata
 
 ---
 
+## Switching from Test to Live (real payments)
+
+Stripe uses the **same API and the same code** for both test and live. Only the **keys and webhook** change.
+
+| | Test (development) | Live (real money) |
+|---|--------------------|-------------------|
+| **Secret key** | `sk_test_...` | `sk_live_...` |
+| **Publishable key** | `pk_test_...` | `pk_live_...` |
+| **Webhook** | One endpoint (e.g. test) + signing secret | A **separate** endpoint in **Live** mode + **new** signing secret |
+
+### What you need to do when going live
+
+1. **In Stripe Dashboard** – Switch to **Live** mode (toggle in the top right: "Test mode" → "Live").
+2. **Live API keys** – Dashboard → Developers → API keys (Live). Copy:
+   - **Secret key** → use as `STRIPE_SECRET_KEY`
+   - **Publishable key** → use as `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (if you use it)
+3. **Live webhook** – In **Live** mode: Webhooks → Add endpoint:
+   - URL: `https://YOUR-LIVE-SITE.com/api/webhooks/stripe`
+   - Event: `checkout.session.completed`
+   - Copy the **Signing secret** (`whsec_...`) → use as `STRIPE_WEBHOOK_SECRET`
+4. **Update your app** – In Vercel (and local `.env` if you test live locally), set:
+   - `STRIPE_SECRET_KEY` = your **live** secret key (`sk_live_...`)
+   - `STRIPE_WEBHOOK_SECRET` = the **live** webhook signing secret (from step 3)
+   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` = your **live** publishable key (`pk_live_...`) if used
+5. **Redeploy** after changing env vars.
+
+The code does not change: same routes, same Stripe SDK. Only the env values switch from test to live.
+
+---
+
 ## Summary
 
 | Where you run the app | Endpoint URL | How you get the secret |

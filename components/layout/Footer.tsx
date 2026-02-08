@@ -78,6 +78,14 @@ export async function Footer() {
         </div>
         <div className="mt-10 border-t border-stone-200 pt-6 text-center text-sm text-stone-500">
           © {new Date().getFullYear()} Studio CAS Settore Legale di Souiai SNC. {t("copyright")}
+          <span className="mx-2">|</span>
+          <Link href="/termini-condizioni" className="hover:text-stone-700 underline">
+            {t("terms")}
+          </Link>
+          <span className="mx-2">|</span>
+          <Link href="/privacy" className="hover:text-stone-700 underline">
+            {t("privacy")}
+          </Link>
         </div>
       </div>
     </footer>

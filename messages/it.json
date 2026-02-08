@@ -13,6 +13,8 @@
       "tagline": "Centro di Ascolto — Assistenza sociale non residenziale.",
       "links": "Link",
       "activity": "Attività",
+      "terms": "Termini e condizioni",
+      "privacy": "Privacy policy",
       "copyright": "Tutti i diritti riservati."
     },
     "buttons": {
@@ -136,5 +138,45 @@
   },
   "officeMap": {
     "heading": "Dove siamo"
+  },
+  "terms": {
+    "title": "Termini e condizioni",
+    "lastUpdate": "Ultimo aggiornamento",
+    "intro": "Utilizzando questo sito e prenotando una consulenza o effettuando un pagamento, l'utente accetta i presenti termini. Si consiglia di leggerli con attenzione.",
+    "s1Title": "1. Servizi",
+    "s1Body": "Studio CAS Settore Legale di Souiai SNC eroga consulenze e assistenza nel settore dell'assistenza sociale non residenziale. I servizi prenotabili tramite sito (in sede o online) sono descritti nella sezione Servizi. Durata, costo e modalità sono indicati al momento della prenotazione.",
+    "s2Title": "2. Prenotazione e pagamento",
+    "s2Body": "La prenotazione è effettiva al conferimento dei dati richiesti e, per i servizi a pagamento, al completamento del pagamento. I pagamenti online sono gestiti tramite Stripe; i dati di carta di credito non transitano sui nostri server e sono soggetti alle norme di sicurezza (PCI-DSS) applicabili. Lo Studio non conserva i numeri di carta.",
+    "s3Title": "3. Cancellazione e recesso",
+    "s3Body": "Le modalità di cancellazione o rimborso sono comunicate al momento della prenotazione o su richiesta. Per consulenze già pagate, è possibile contattarci per valutare eventuali rimborsi secondo la nostra politica interna.",
+    "s4Title": "4. Responsabilità",
+    "s4Body": "Lo Studio si impegna a erogare i servizi con diligenza. La responsabilità è limitata alla prestazione concordata. Non sono coperti danni indiretti o consequenziali salvo obblighi di legge.",
+    "s5Title": "5. Legge applicabile e foro",
+    "s5Body": "I presenti termini sono regolati dalla legge italiana. Per qualsiasi controversia è competente il foro di Ancona.",
+    "s6Title": "6. Contatti",
+    "s6Body": "Per domande sui termini: contattaci tramite i recapiti indicati nella pagina Contatti.",
+    "metaDescription": "Termini e condizioni di utilizzo del sito e dei servizi di Studio CAS Settore Legale di Souiai SNC."
+  },
+  "privacy": {
+    "title": "Informativa sulla privacy (Privacy policy)",
+    "lastUpdate": "Ultimo aggiornamento",
+    "intro": "La presente informativa descrive come Studio CAS Settore Legale di Souiai SNC tratta i dati personali degli utenti del sito e dei clienti che prenotano consulenze o effettuano pagamenti, nel rispetto del Regolamento UE 2016/679 (GDPR) e della normativa italiana.",
+    "s1Title": "1. Titolare del trattamento",
+    "s1Body": "Il titolare del trattamento è Studio CAS Settore Legale di Souiai SNC. Per esercitare i diritti previsti dal GDPR o per richieste relative alla privacy è possibile contattarci tramite i recapiti indicati nella pagina Contatti.",
+    "s2Title": "2. Dati raccolti",
+    "s2Body": "Raccogliamo i dati necessari per erogare il servizio: nome, cognome, email, telefono, eventuale messaggio o motivo della richiesta. Per le prenotazioni online a pagamento, il pagamento è elaborato da Stripe: noi non raccogliamo né conserviamo i dati della carta di credito (numero, CVV, ecc.); Stripe è conforme agli standard PCI-DSS. Possiamo inoltre ricevere e conservare documenti o informazioni che l'utente fornisce per la consulenza (es. documenti richiesti per la pratica), nel rispetto della riservatezza e delle finalità del servizio.",
+    "s3Title": "3. Base giuridica e finalità",
+    "s3Body": "Il trattamento è fondato sull'esecuzione del contratto (prenotazione e consulenza), su obblighi di legge e, ove applicabile, sul consenso. I dati sono utilizzati per: gestire prenotazioni, erogare consulenze, comunicare link video e conferme, adempiere obblighi contabili e fiscali, e per eventuali comunicazioni strettamente connesse al servizio.",
+    "s4Title": "4. Conservazione",
+    "s4Body": "I dati sono conservati per il tempo necessario a erogare il servizio e ad adempiere agli obblighi di legge (inclusi contabilità e fiscali). I dati di pagamento sono gestiti da Stripe secondo i propri termini; noi conserviamo solo gli estremi necessari per la fatturazione e la riconciliazione.",
+    "s5Title": "5. Diritti dell'interessato (GDPR)",
+    "s5Body": "L'interessato ha diritto di: accesso ai propri dati (art. 15), rettifica (art. 16), cancellazione (art. 17), limitazione del trattamento (art. 18), portabilità (art. 20), opposizione (art. 21). Può revocare il consenso ove basato su consenso, senza pregiudicare la liceità del trattamento precedente. Ha il diritto di proporre reclamo all'Autorità Garante per la protezione dei dati personali (garanteprivacy.it).",
+    "s6Title": "6. Sicurezza",
+    "s6Body": "Adottiamo misure tecniche e organizzative adeguate per proteggere i dati (accesso limitato, connessioni sicure, utilizzo di fornitori conformi come Stripe per i pagamenti). I documenti e le informazioni sensibili sono trattati con riservatezza e solo per le finalità indicate.",
+    "s7Title": "7. Cookie e strumenti tecnici",
+    "s7Body": "Il sito può utilizzare cookie o strumenti tecnici necessari al funzionamento (es. gestione sessione, preferenze lingua). Per i dettagli si rimanda alla presente informativa o a eventuali banner/cookie policy presenti sul sito.",
+    "s8Title": "8. Contatti",
+    "s8Body": "Per richieste relative alla privacy o per esercitare i diritti GDPR: contattaci tramite i recapiti indicati nella pagina Contatti.",
+    "metaDescription": "Informativa sulla privacy e sul trattamento dei dati personali - Studio CAS Settore Legale di Souiai SNC (GDPR)."
   }
 }

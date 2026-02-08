@@ -13,6 +13,8 @@
       "tagline": "Centre d'écoute — Action sociale non résidentielle.",
       "links": "Liens",
       "activity": "Activité",
+      "terms": "Conditions générales",
+      "privacy": "Politique de confidentialité",
       "copyright": "Tous droits réservés."
     },
     "buttons": {
@@ -136,5 +138,45 @@
   },
   "officeMap": {
     "heading": "Où nous trouver"
+  },
+  "terms": {
+    "title": "Conditions générales",
+    "lastUpdate": "Dernière mise à jour",
+    "intro": "En utilisant ce site et en réservant une consultation ou en effectuant un paiement, vous acceptez les présentes conditions. Veuillez les lire attentivement.",
+    "s1Title": "1. Services",
+    "s1Body": "Studio CAS Settore Legale di Souiai SNC fournit des consultations et une assistance dans le secteur de l'action sociale non résidentielle. Les services réservables via le site (sur place ou en ligne) sont décrits dans la section Services.",
+    "s2Title": "2. Réservation et paiement",
+    "s2Body": "La réservation est confirmée lorsque les données requises sont fournies et, pour les services payants, lorsque le paiement est effectué. Les paiements en ligne sont traités par Stripe ; les données de carte ne transitent pas par nos serveurs.",
+    "s3Title": "3. Annulation et remboursements",
+    "s3Body": "Les conditions d'annulation ou de remboursement sont communiquées au moment de la réservation ou sur demande.",
+    "s4Title": "4. Responsabilité",
+    "s4Body": "Le Studio s'engage à fournir les services avec diligence. La responsabilité est limitée au service convenu.",
+    "s5Title": "5. Droit applicable et juridiction",
+    "s5Body": "Les présentes conditions sont régies par le droit italien. Tout litige relève des tribunaux d'Ancona.",
+    "s6Title": "6. Contact",
+    "s6Body": "Pour toute question : contactez-nous via la page Contact.",
+    "metaDescription": "Conditions générales d'utilisation du site et des services - Studio CAS."
+  },
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "lastUpdate": "Dernière mise à jour",
+    "intro": "Cette politique décrit comment Studio CAS traite les données personnelles des utilisateurs et des clients, conformément au RGPD (UE 2016/679) et à la loi italienne.",
+    "s1Title": "1. Responsable du traitement",
+    "s1Body": "Le responsable du traitement est Studio CAS Settore Legale di Souiai SNC. Pour exercer vos droits au titre du RGPD, contactez-nous via la page Contact.",
+    "s2Title": "2. Données collectées",
+    "s2Body": "Nous collectons les données nécessaires au service : nom, email, téléphone. Les paiements en ligne sont traités par Stripe ; nous ne collectons pas les données de carte. Nous pouvons conserver les documents fournis pour la consultation.",
+    "s3Title": "3. Base légale et finalités",
+    "s3Body": "Le traitement est fondé sur l'exécution du contrat, les obligations légales et le consentement le cas échéant.",
+    "s4Title": "4. Conservation",
+    "s4Body": "Les données sont conservées le temps nécessaire au service et aux obligations légales.",
+    "s5Title": "5. Vos droits (RGPD)",
+    "s5Body": "Vous disposez des droits d'accès, rectification, effacement, limitation, portabilité et d'opposition. Vous pouvez introduire une réclamation auprès d'une autorité de contrôle.",
+    "s6Title": "6. Sécurité",
+    "s6Body": "Nous mettons en œuvre des mesures techniques et organisationnelles pour protéger les données.",
+    "s7Title": "7. Cookies",
+    "s7Body": "Le site peut utiliser des cookies techniques nécessaires au fonctionnement.",
+    "s8Title": "8. Contact",
+    "s8Body": "Pour toute demande relative à la vie privée : contactez-nous via la page Contact.",
+    "metaDescription": "Politique de confidentialité et traitement des données - Studio CAS (RGPD)."
   }
 }

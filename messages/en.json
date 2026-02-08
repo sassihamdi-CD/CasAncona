@@ -13,6 +13,8 @@
       "tagline": "Listening Centre — Non-residential social assistance.",
       "links": "Links",
       "activity": "Activity",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy",
       "copyright": "All rights reserved."
     },
     "buttons": {
@@ -136,5 +138,45 @@
   },
   "officeMap": {
     "heading": "Where we are"
+  },
+  "terms": {
+    "title": "Terms and conditions",
+    "lastUpdate": "Last updated",
+    "intro": "By using this website and booking a consultation or making a payment, you accept these terms. Please read them carefully.",
+    "s1Title": "1. Services",
+    "s1Body": "Studio CAS Settore Legale di Souiai SNC provides consultations and assistance in the non-residential social assistance sector. Services bookable via the website (in person or online) are described in the Services section. Duration, cost and modalities are shown at the time of booking.",
+    "s2Title": "2. Booking and payment",
+    "s2Body": "The booking is confirmed when the required data are provided and, for paid services, when payment is completed. Online payments are processed by Stripe; credit card data do not pass through our servers and are subject to applicable security standards (PCI-DSS). The Studio does not store card numbers.",
+    "s3Title": "3. Cancellation and refunds",
+    "s3Body": "Cancellation or refund conditions are communicated at the time of booking or on request. For paid consultations, you may contact us to discuss any refunds in accordance with our internal policy.",
+    "s4Title": "4. Liability",
+    "s4Body": "The Studio undertakes to provide services with due care. Liability is limited to the agreed service. Indirect or consequential damages are not covered except where required by law.",
+    "s5Title": "5. Governing law and jurisdiction",
+    "s5Body": "These terms are governed by Italian law. Any dispute shall be subject to the courts of Ancona.",
+    "s6Title": "6. Contact",
+    "s6Body": "For questions about these terms: contact us via the details on the Contact page.",
+    "metaDescription": "Terms and conditions of use of the website and services of Studio CAS Settore Legale di Souiai SNC."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "lastUpdate": "Last updated",
+    "intro": "This policy describes how Studio CAS Settore Legale di Souiai SNC processes the personal data of users of the website and of clients who book consultations or make payments, in compliance with EU Regulation 2016/679 (GDPR) and Italian law.",
+    "s1Title": "1. Data controller",
+    "s1Body": "The data controller is Studio CAS Settore Legale di Souiai SNC. To exercise your rights under the GDPR or for privacy-related requests, you may contact us via the details on the Contact page.",
+    "s2Title": "2. Data we collect",
+    "s2Body": "We collect data necessary to provide the service: name, email, phone, and any message or reason for the request. For paid online bookings, payment is processed by Stripe: we do not collect or store credit card data (number, CVV, etc.); Stripe is PCI-DSS compliant. We may also receive and store documents or information you provide for the consultation (e.g. documents required for your case), in compliance with confidentiality and the purposes of the service.",
+    "s3Title": "3. Legal basis and purposes",
+    "s3Body": "Processing is based on performance of the contract (booking and consultation), legal obligations, and where applicable consent. Data are used to: manage bookings, provide consultations, send video links and confirmations, fulfil accounting and tax obligations, and for any communications strictly related to the service.",
+    "s4Title": "4. Retention",
+    "s4Body": "Data are kept for as long as necessary to provide the service and comply with legal obligations (including accounting and tax). Payment data are handled by Stripe under its own terms; we only keep the details needed for billing and reconciliation.",
+    "s5Title": "5. Your rights (GDPR)",
+    "s5Body": "You have the right to: access your data (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20), objection (Art. 21). You may withdraw consent where processing is based on consent, without affecting the lawfulness of prior processing. You have the right to lodge a complaint with a supervisory authority (e.g. Garante per la protezione dei dati personali, garanteprivacy.it).",
+    "s6Title": "6. Security",
+    "s6Body": "We adopt appropriate technical and organisational measures to protect data (limited access, secure connections, use of compliant providers such as Stripe for payments). Documents and sensitive information are treated confidentially and only for the stated purposes.",
+    "s7Title": "7. Cookies and technical tools",
+    "s7Body": "The website may use cookies or technical tools necessary for operation (e.g. session management, language preferences). See this policy or any cookie banner on the site for details.",
+    "s8Title": "8. Contact",
+    "s8Body": "For privacy requests or to exercise your GDPR rights: contact us via the details on the Contact page.",
+    "metaDescription": "Privacy policy and personal data processing - Studio CAS Settore Legale di Souiai SNC (GDPR)."
   }
 }
