@@ -49,12 +49,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ appointments: [] });
     }
 
-    const serviceIds = [...new Set(appointments.map((a) => a.service_id))];
+    const serviceIds = Array.from(new Set(appointments.map((a) => a.service_id)));
     const { data: services } = await supabase
       .from("services")
       .select("id, name")
       .in("id", serviceIds);
-    const serviceMap = new Map((services ?? []).map((s) => [s.id, (s as ServiceRow).name]));
+    const serviceList = (services ?? []) as Pick<ServiceRow, "id" | "name">[];
+    const serviceMap = new Map(serviceList.map((s) => [s.id, s.name]));
 
     const result = appointments.map((a) => ({
       id: a.id,
