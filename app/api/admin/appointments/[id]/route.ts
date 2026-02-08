@@ -74,6 +74,13 @@ export async function PATCH(
       }
       updates.status = b.status;
     }
+    if (b.amountPaidCents !== undefined) {
+      if (b.amountPaidCents !== null && (typeof b.amountPaidCents !== "number" || b.amountPaidCents < 0)) {
+        return badRequest("amountPaidCents must be a non-negative number or null");
+      }
+      updates.amount_paid_cents = b.amountPaidCents;
+    }
+    if (b.currency !== undefined) updates.currency = b.currency ?? null;
 
     if (Object.keys(updates).length <= 1) {
       return badRequest("No allowed fields to update");

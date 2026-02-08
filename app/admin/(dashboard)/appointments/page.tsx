@@ -15,6 +15,7 @@ type Appointment = {
   durationMinutes: number;
   status: string;
   videoRoomUrl: string | null;
+  passportDocumentPath: string | null;
 };
 
 function formatDate(iso: string, locale: string): string {
@@ -42,7 +43,8 @@ export default function AdminAppointmentsPage() {
     try {
       const from = new Date();
       const to = new Date();
-      to.setDate(to.getDate() + 14);
+      from.setDate(from.getDate() - 30);
+      to.setDate(to.getDate() + 90);
       const fromStr = from.toISOString().slice(0, 10);
       const toStr = to.toISOString().slice(0, 10);
 
@@ -109,6 +111,8 @@ export default function AdminAppointmentsPage() {
                 <th className="px-4 py-3 font-semibold text-stone-900">{t("appointments.type")}</th>
                 <th className="px-4 py-3 font-semibold text-stone-900">{t("appointments.status")}</th>
                 <th className="px-4 py-3 font-semibold text-stone-900">{t("appointments.video")}</th>
+                <th className="px-4 py-3 font-semibold text-stone-900">{t("appointments.passport")}</th>
+                <th className="px-4 py-3 font-semibold text-stone-900">{t("appointments.receipt")}</th>
               </tr>
             </thead>
             <tbody>
@@ -156,6 +160,30 @@ export default function AdminAppointmentsPage() {
                     ) : (
                       <span className="text-stone-400">—</span>
                     )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {apt.passportDocumentPath ? (
+                      <a
+                        href={`/admin/appointments/${apt.id}/passport`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        {t("appointments.viewPassport")}
+                      </a>
+                    ) : (
+                      <span className="text-stone-400">—</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <a
+                      href={`/admin/appointments/${apt.id}/receipt`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {t("appointments.viewReceipt")}
+                    </a>
                   </td>
                 </tr>
               ))}

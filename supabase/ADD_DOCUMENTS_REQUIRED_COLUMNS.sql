@@ -11,7 +11,7 @@ ALTER TABLE public.services
 
 -- Optional: example content for one service (Italian). Edit or add more in Table Editor.
 -- One line per document; users see an expandable "Documenti da preparare" on the card.
-/*
+
 UPDATE public.services
 SET
   documents_required = 'Documento d''identità o passaporto in corso di validità
@@ -19,7 +19,7 @@ Permesso di soggiorno (se già in possesso)
 Codice fiscale
 Eventuale documentazione già in tuo possesso sulla pratica'
 WHERE name = 'Prima consulenza immigrazione';
-*/
+
 
 -- After running this, fill documents_required (and _en, _ar, _fr if you want per-language)
 -- in Supabase Table Editor → services. Use newlines to get one bullet per line on the card.

@@ -5,7 +5,6 @@ import { useAdminLocale } from "../../AdminLocaleProvider";
 import type { AdminClientSummary } from "@/lib/types";
 
 function formatAmount(cents: number, currency: string): string {
-  if (cents === 0) return "—";
   const amount = (cents / 100).toFixed(2);
   const c = (currency || "eur").toUpperCase();
   if (c === "EUR") return `€${amount}`;

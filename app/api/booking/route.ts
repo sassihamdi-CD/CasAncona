@@ -1,6 +1,7 @@
 /**
- * POST /api/booking — create appointment (pending_payment) and return Stripe Checkout URL.
- * Body: serviceId, startAt (ISO UTC), clientName, clientEmail, clientPhone (required), clientMessage?
+ * POST /api/booking — create appointment (pending_payment), upload passport, return Stripe Checkout URL.
+ * Body: multipart/form-data with serviceId, consultationType, startAt, clientName, clientEmail,
+ * clientPhone, clientMessage?, locale?, and required file "passport" (image or PDF, max 5 MB).
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -9,8 +10,13 @@ import { getSupabaseAdmin } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database.types";
 import { getAvailableSlots } from "@/lib/slots/compute";
 import { badRequest, conflict, notFound, serverError } from "@/lib/api/response";
-import type { CreateBookingBody, CreateBookingResponse } from "@/lib/types";
+import type { CreateBookingResponse } from "@/lib/types";
 import { AppointmentStatus } from "@/lib/types";
+import {
+  PASSPORT_DOCUMENTS_BUCKET,
+  PASSPORT_UPLOAD_MAX_BYTES,
+  isPassportAllowedMimeType,
+} from "@/lib/constants/storage";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -20,38 +26,69 @@ const CONSULTATION_TYPES = ["in_person", "online"] as const;
 /** In-person at office: fixed 100 €, paid in advance (lawyer requirement). */
 const IN_PERSON_PRICE_CENTS = 10000;
 
-function validateBody(body: unknown): body is CreateBookingBody {
-  if (!body || typeof body !== "object") return false;
-  const b = body as Record<string, unknown>;
-  return (
-    typeof b.serviceId === "string" &&
-    UUID_REGEX.test(b.serviceId) &&
-    typeof b.consultationType === "string" &&
-    CONSULTATION_TYPES.includes(b.consultationType as (typeof CONSULTATION_TYPES)[number]) &&
-    typeof b.startAt === "string" &&
-    typeof b.clientName === "string" &&
-    b.clientName.trim().length > 0 &&
-    typeof b.clientEmail === "string" &&
-    b.clientEmail.trim().length > 0 &&
-    typeof b.clientPhone === "string" &&
-    b.clientPhone.trim().length > 0
-  );
+function getString(formData: FormData, key: string): string {
+  const v = formData.get(key);
+  return typeof v === "string" ? v : "";
+}
+
+function getPassportFile(formData: FormData): File | null {
+  const v = formData.get("passport");
+  return v instanceof File && v.size > 0 ? v : null;
+}
+
+/** Derive safe file extension for storage path. */
+function getPassportExtension(file: File): string {
+  const name = file.name?.trim() || "";
+  const ext = name.split(".").pop()?.toLowerCase();
+  if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "pdf") return ext;
+  if (file.type === "image/jpeg") return "jpg";
+  if (file.type === "image/png") return "png";
+  if (file.type === "application/pdf") return "pdf";
+  return "jpg";
 }
 
 export async function POST(request: NextRequest) {
   try {
-    let body: unknown;
+    let formData: FormData;
     try {
-      body = await request.json();
+      formData = await request.formData();
     } catch {
-      return badRequest("Invalid JSON body");
+      return badRequest("Invalid form data");
     }
 
-    if (!validateBody(body)) {
-      return badRequest("Missing or invalid fields: serviceId, consultationType (in_person|online), startAt, clientName, clientEmail, clientPhone");
+    const serviceId = getString(formData, "serviceId").trim();
+    const consultationType = getString(formData, "consultationType").trim();
+    const startAt = getString(formData, "startAt").trim();
+    const clientName = getString(formData, "clientName").trim();
+    const clientEmail = getString(formData, "clientEmail").trim();
+    const clientPhone = getString(formData, "clientPhone").trim();
+    const clientMessage = getString(formData, "clientMessage").trim();
+    const locale = getString(formData, "locale").trim() || "it";
+
+    if (
+      !UUID_REGEX.test(serviceId) ||
+      !CONSULTATION_TYPES.includes(consultationType as (typeof CONSULTATION_TYPES)[number]) ||
+      !startAt ||
+      !clientName ||
+      !clientEmail ||
+      !clientPhone
+    ) {
+      return badRequest(
+        "Missing or invalid fields: serviceId, consultationType (in_person|online), startAt, clientName, clientEmail, clientPhone"
+      );
     }
 
-    const { serviceId, consultationType, startAt, clientName, clientEmail, clientPhone, clientMessage } = body;
+    const passportFile = getPassportFile(formData);
+    if (!passportFile) {
+      return badRequest("Passport photo is required (image or PDF, max 5 MB)");
+    }
+    if (passportFile.size > PASSPORT_UPLOAD_MAX_BYTES) {
+      return badRequest("Passport file is too large (max 5 MB)");
+    }
+    const mime = (passportFile.type || "").toLowerCase().split(";")[0].trim();
+    if (!isPassportAllowedMimeType(mime)) {
+      return badRequest("Passport must be image (JPEG, PNG) or PDF");
+    }
 
     const supabase = getSupabaseAdmin();
 
@@ -85,10 +122,10 @@ export async function POST(request: NextRequest) {
         service_id: serviceId,
         assigned_staff_id: slotMatch.staffId ?? null,
         consultation_type: consultationType,
-        client_name: clientName.trim(),
-        client_email: clientEmail.trim().toLowerCase(),
-        client_phone: clientPhone.trim(),
-        client_message: clientMessage?.trim() || null,
+        client_name: clientName,
+        client_email: clientEmail.toLowerCase(),
+        client_phone: clientPhone,
+        client_message: clientMessage || null,
         requested_start_at: startAt,
         duration_minutes: durationMinutes,
         status: AppointmentStatus.PENDING_PAYMENT,
@@ -105,12 +142,32 @@ export async function POST(request: NextRequest) {
     }
 
     const apt = appointment as { id: string };
-    // Use request origin so redirect goes to the same port/host the user is on (avoids -102 when .env has different port)
+    const ext = getPassportExtension(passportFile);
+    const storagePath = `${apt.id}/passport.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(PASSPORT_DOCUMENTS_BUCKET)
+      .upload(storagePath, passportFile, {
+        contentType: passportFile.type || (ext === "pdf" ? "application/pdf" : "image/jpeg"),
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("[api/booking] passport upload error:", uploadError);
+      return serverError();
+    }
+
+    await supabase
+      .from("appointments")
+      .update({
+        passport_document_path: storagePath,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", apt.id);
+
     const baseUrl = request.nextUrl.origin || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const locale = (body as CreateBookingBody).locale ?? "it";
     const localePrefix = locale ? `/${locale}` : "";
 
-    // Both in-person and online: paid via Stripe (prices set per service in admin)
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeSecretKey) {
       return NextResponse.json(
@@ -128,21 +185,23 @@ export async function POST(request: NextRequest) {
     const amountCents = isInPerson ? IN_PERSON_PRICE_CENTS : svc.price_cents;
     const productName = isInPerson ? `Consulenza in sede — ${svc.name}` : svc.name;
 
-    const lineItem: Stripe.Checkout.SessionCreateParams["line_items"] = [{
-      quantity: 1,
-      ...(stripePriceId
-        ? { price: stripePriceId }
-        : {
-            price_data: {
-              currency: (svc.currency ?? "eur").toLowerCase(),
-              unit_amount: amountCents,
-              product_data: {
-                name: productName,
-                description: svc.description ?? undefined,
+    const lineItem: Stripe.Checkout.SessionCreateParams["line_items"] = [
+      {
+        quantity: 1,
+        ...(stripePriceId
+          ? { price: stripePriceId }
+          : {
+              price_data: {
+                currency: (svc.currency ?? "eur").toLowerCase(),
+                unit_amount: amountCents,
+                product_data: {
+                  name: productName,
+                  description: svc.description ?? undefined,
+                },
               },
-            },
-          }),
-    }];
+            }),
+      },
+    ];
 
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: "payment",
@@ -150,28 +209,25 @@ export async function POST(request: NextRequest) {
       line_items: lineItem,
       success_url: `${baseUrl}${localePrefix}/booking/confirm?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}${localePrefix}/book?cancelled=1`,
-      metadata: {
-        appointment_id: apt.id,
-      },
-      customer_email: clientEmail.trim(),
+      metadata: { appointment_id: apt.id },
+      customer_email: clientEmail,
     };
 
     const session = await stripe.checkout.sessions.create(sessionParams);
 
-    // @ts-expect-error Supabase untyped client update
-    await supabase.from("appointments").update({
-      stripe_session_id: session.id,
-      updated_at: new Date().toISOString(),
-    }).eq("id", apt.id);
+    await supabase
+      .from("appointments")
+      .update({
+        stripe_session_id: session.id,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", apt.id);
 
     const checkoutUrl =
       session.url ?? `${baseUrl}/booking/confirm?session_id=${session.id}`;
 
     return NextResponse.json(
-      {
-        appointmentId: apt.id,
-        checkoutUrl,
-      } satisfies CreateBookingResponse,
+      { appointmentId: apt.id, checkoutUrl } satisfies CreateBookingResponse,
       { status: 201 }
     );
   } catch (e) {

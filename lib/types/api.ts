@@ -92,6 +92,9 @@ export interface GetAdminAppointmentResponse {
 export interface PatchAdminAppointmentBody {
   assignedStaffId?: string | null;
   status?: string;
+  /** Record in-person payment (admin-created / walk-in). Amount in cents. */
+  amountPaidCents?: number | null;
+  currency?: string | null;
 }
 
 export interface PatchAdminAppointmentResponse {

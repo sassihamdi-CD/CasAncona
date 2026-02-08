@@ -12,6 +12,9 @@ export const OFFICE_ADDRESS = {
   country: "Italia",
 } as const;
 
+/** Full legal name for receipts and official documents */
+export const STUDIO_LEGAL_NAME = "Studio CAS Settore Legale di Souiai SNC" as const;
+
 /** Single-line address for links and display */
 export const OFFICE_ADDRESS_LINE =
   `${OFFICE_ADDRESS.street}, ${OFFICE_ADDRESS.postalCode} ${OFFICE_ADDRESS.city} ${OFFICE_ADDRESS.province}, ${OFFICE_ADDRESS.country}` as const;

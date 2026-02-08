@@ -23,6 +23,8 @@ export interface Appointment {
   currency: string | null;
   videoRoomId: string | null;
   videoRoomUrl: string | null;
+  /** Storage path in bucket passport-documents, e.g. {id}/passport.jpg */
+  passportDocumentPath: string | null;
   createdAt: string;
   updatedAt: string;
 }

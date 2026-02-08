@@ -93,6 +93,7 @@ export interface Database {
           currency: string | null;
           video_room_id: string | null;
           video_room_url: string | null;
+          passport_document_path: string | null;
           created_at: string;
           updated_at: string;
         };

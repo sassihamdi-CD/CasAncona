@@ -69,6 +69,10 @@ export const adminMessages: Record<
       status: string;
       video: string;
       openVideo: string;
+      passport: string;
+      viewPassport: string;
+      printPassport: string;
+      printPassportHint: string;
       online: string;
       inPerson: string;
       note: string;
@@ -91,6 +95,30 @@ export const adminMessages: Record<
       selectDate: string;
       selectTime: string;
       noSlots: string;
+      receipt: string;
+      viewReceipt: string;
+    };
+    receipt: {
+      title: string;
+      print: string;
+      receiptNumber: string;
+      date: string;
+      client: string;
+      service: string;
+      typeOnline: string;
+      typeInPerson: string;
+      appointmentDate: string;
+      amountPaid: string;
+      paymentMethodOnline: string;
+      paymentMethodInPerson: string;
+      footer: string;
+      signatureLine: string;
+      recordPayment: string;
+      recordPaymentHint: string;
+      amountEuros: string;
+      saveAndShowReceipt: string;
+      saving: string;
+      recordError: string;
     };
     clients: {
       title: string;
@@ -214,7 +242,7 @@ export const adminMessages: Record<
       createAppointment: "Crea prenotazione (in sede)",
       refresh: "Aggiorna",
       loading: "Caricamento…",
-      noAppointments: "Nessuna prenotazione nei prossimi 14 giorni.",
+      noAppointments: "Nessuna prenotazione nel periodo selezionato.",
       dateTime: "Data e ora",
       client: "Cliente",
       service: "Servizio",
@@ -222,9 +250,13 @@ export const adminMessages: Record<
       status: "Stato",
       video: "Video",
       openVideo: "Apri video",
+      passport: "Passaporto",
+      viewPassport: "Vedi passaporto",
+      printPassport: "Stampa (A4)",
+      printPassportHint: "Stampa la pagina per ottenere la foto del passaporto su foglio A4 da consegnare all'avvocato.",
       online: "Online",
       inPerson: "In sede",
-      note: "Mostra prenotazioni da oggi ai prossimi 14 giorni.",
+      note: "Mostra prenotazioni dagli ultimi 30 giorni ai prossimi 90.",
       sessionExpired: "Sessione scaduta. Effettua di nuovo l'accesso.",
       loadError: "Errore di caricamento",
       createTitle: "Nuova prenotazione (cliente in ufficio)",
@@ -244,6 +276,30 @@ export const adminMessages: Record<
       selectDate: "Scegli data",
       selectTime: "Scegli orario",
       noSlots: "Nessun orario disponibile in questa data.",
+      receipt: "Ricevuta",
+      viewReceipt: "Stampa ricevuta",
+    },
+    receipt: {
+      title: "Ricevuta di pagamento",
+      print: "Stampa ricevuta",
+      receiptNumber: "N. ricevuta",
+      date: "Data",
+      client: "Cliente",
+      service: "Servizio",
+      typeOnline: "Consultazione online",
+      typeInPerson: "Consultazione in sede",
+      appointmentDate: "Data e ora appuntamento",
+      amountPaid: "Importo pagato",
+      paymentMethodOnline: "Pagamento online (carta)",
+      paymentMethodInPerson: "Pagamento in sede (contanti o altro)",
+      footer: "Documento rilasciato a titolo di ricevuta per il pagamento ricevuto.",
+      signatureLine: "Firma per accettazione",
+      recordPayment: "Registra pagamento (in sede)",
+      recordPaymentHint: "Per le prenotazioni create in ufficio, inserisci l'importo pagato dal cliente e salva; poi puoi stampare la ricevuta.",
+      amountEuros: "Importo (€)",
+      saveAndShowReceipt: "Salva e mostra ricevuta",
+      saving: "Salvataggio…",
+      recordError: "Errore durante il salvataggio.",
     },
     clients: {
       title: "Clienti",
@@ -368,7 +424,7 @@ export const adminMessages: Record<
       createAppointment: "Create appointment (walk-in)",
       refresh: "Refresh",
       loading: "Loading…",
-      noAppointments: "No appointments in the next 14 days.",
+      noAppointments: "No appointments in the selected period.",
       dateTime: "Date & time",
       client: "Client",
       service: "Service",
@@ -376,9 +432,13 @@ export const adminMessages: Record<
       status: "Status",
       video: "Video",
       openVideo: "Open video",
+      passport: "Passport",
+      viewPassport: "View passport",
+      printPassport: "Print (A4)",
+      printPassportHint: "Print this page to get the passport photo on A4 paper to hand to the lawyer.",
       online: "Online",
       inPerson: "In person",
-      note: "Showing appointments from today for the next 14 days.",
+      note: "Showing appointments from the last 30 days to the next 90.",
       sessionExpired: "Session expired. Please sign in again.",
       loadError: "Load error",
       createTitle: "New appointment (client at office)",
@@ -398,6 +458,30 @@ export const adminMessages: Record<
       selectDate: "Select date",
       selectTime: "Select time",
       noSlots: "No slots available on this date.",
+      receipt: "Receipt",
+      viewReceipt: "Print receipt",
+    },
+    receipt: {
+      title: "Payment receipt",
+      print: "Print receipt",
+      receiptNumber: "Receipt no.",
+      date: "Date",
+      client: "Client",
+      service: "Service",
+      typeOnline: "Online consultation",
+      typeInPerson: "In-person consultation",
+      appointmentDate: "Appointment date & time",
+      amountPaid: "Amount paid",
+      paymentMethodOnline: "Online payment (card)",
+      paymentMethodInPerson: "In-person payment (cash or other)",
+      footer: "This document is issued as a receipt for the payment received.",
+      signatureLine: "Signature for acceptance",
+      recordPayment: "Record payment (in person)",
+      recordPaymentHint: "For appointments created at the office, enter the amount the client paid and save; then you can print the receipt.",
+      amountEuros: "Amount (€)",
+      saveAndShowReceipt: "Save and show receipt",
+      saving: "Saving…",
+      recordError: "Error saving.",
     },
     clients: {
       title: "Clients",

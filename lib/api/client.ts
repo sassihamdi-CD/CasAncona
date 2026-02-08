@@ -7,7 +7,6 @@ import type {
   GetServicesResponse,
   GetServiceResponse,
   GetSlotsResponse,
-  CreateBookingBody,
   CreateBookingResponse,
   GetBookingConfirmResponse,
   ApiError,
@@ -51,13 +50,11 @@ export async function fetchSlots(
   return handleResponse<GetSlotsResponse>(res);
 }
 
-export async function createBooking(
-  body: CreateBookingBody
-): Promise<CreateBookingResponse> {
+/** Create booking with multipart form data (includes required passport file). */
+export async function createBooking(formData: FormData): Promise<CreateBookingResponse> {
   const res = await fetch(`${getBaseUrl()}/api/booking`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: formData,
   });
   return handleResponse<CreateBookingResponse>(res);
 }

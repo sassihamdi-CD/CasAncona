@@ -1,6 +1,11 @@
 /**
  * POST /api/webhooks/stripe — Stripe webhook handler.
  * On checkout.session.completed: confirm appointment, create video room, email client, notify lawyer.
+ *
+ * CRITICAL FOR REAL MONEY: This is the only place that moves a booking from pending_payment to
+ * confirmed. If this webhook is not called (wrong URL or Stripe cannot reach it) or fails
+ * (wrong STRIPE_WEBHOOK_SECRET, wrong DB), the client has paid but the booking stays pending.
+ * See docs/LIVE_PAYMENTS_CHECKLIST.md for production setup.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -96,6 +101,8 @@ export async function POST(request: NextRequest) {
     console.error("[webhooks/stripe] Update failed:", updateError);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
+
+  console.log("[webhooks/stripe] Appointment confirmed:", appointmentId, "amount:", session.amount_total, "online:", isOnline);
 
   const { data: serviceRow } = await supabase
     .from("services")

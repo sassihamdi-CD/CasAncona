@@ -148,6 +148,7 @@ export function mapAppointment(row: AppointmentRow): Appointment {
     currency: row.currency,
     videoRoomId: row.video_room_id,
     videoRoomUrl: row.video_room_url,
+    passportDocumentPath: row.passport_document_path ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

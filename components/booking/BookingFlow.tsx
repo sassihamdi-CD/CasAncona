@@ -56,6 +56,7 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
   const [phoneCountryCode, setPhoneCountryCode] = useState("39");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [passportFile, setPassportFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -118,22 +119,37 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
   maxDate.setMonth(maxDate.getMonth() + 2);
   const maxDateStr = maxDate.toISOString().slice(0, 10);
 
+  const PASSPORT_MAX_BYTES = 5 * 1024 * 1024; // 5 MB
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!serviceId || !consultationType || !startAt || !name.trim() || !email.trim() || !phone.trim() || !message.trim()) return;
+    if (!passportFile) {
+      setSubmitError(t("passportRequired"));
+      return;
+    }
+    if (passportFile.size > PASSPORT_MAX_BYTES) {
+      setSubmitError(t("passportTooLarge"));
+      return;
+    }
+    const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
+    if (!allowedTypes.includes(passportFile.type?.toLowerCase() || "")) {
+      setSubmitError(t("passportInvalidType"));
+      return;
+    }
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const res = await createBooking({
-        serviceId,
-        consultationType,
-        startAt,
-        clientName: name.trim(),
-        clientEmail: email.trim().toLowerCase(),
-        clientPhone: `+${phoneCountryCode} ${phone.trim().replace(/\s/g, "")}`,
-        clientMessage: message.trim() || undefined,
-        locale: locale as string,
-      });
+      const formData = new FormData();
+      formData.set("serviceId", serviceId);
+      formData.set("consultationType", consultationType);
+      formData.set("startAt", startAt);
+      formData.set("clientName", name.trim());
+      formData.set("clientEmail", email.trim().toLowerCase());
+      formData.set("clientPhone", `+${phoneCountryCode} ${phone.trim().replace(/\s/g, "")}`);
+      formData.set("clientMessage", message.trim());
+      formData.set("locale", locale as string);
+      formData.set("passport", passportFile);
+      const res = await createBooking(formData);
       if (res.confirmationUrl) {
         window.location.href = res.confirmationUrl;
         return;
@@ -143,8 +159,9 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
         return;
       }
       setSubmitError(t("errorSubmit"));
-    } catch {
-      setSubmitError(t("errorSubmit"));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : t("errorSubmit");
+      setSubmitError(message);
     } finally {
       setSubmitting(false);
     }
@@ -324,6 +341,23 @@ export function BookingFlow({ preselectedServiceId }: BookingFlowProps) {
                 placeholder={t("reasonForBookingPlaceholder")}
                 className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2 text-stone-900"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-stone-700">{t("passportLabel")} *</label>
+              <p className="mt-0.5 text-xs text-stone-500">{t("passportHint")}</p>
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"
+                required
+                onChange={(e) => setPassportFile(e.target.files?.[0] ?? null)}
+                className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2 text-stone-900 file:mr-3 file:rounded file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:text-white file:hover:bg-primary-hover"
+                aria-describedby="passport-hint"
+              />
+              {passportFile && (
+                <p className="mt-1 text-xs text-stone-600" id="passport-hint">
+                  {passportFile.name} ({(passportFile.size / 1024).toFixed(1)} KB)
+                </p>
+              )}
             </div>
             {submitError && (
               <p className="text-sm text-red-600">{submitError}</p>

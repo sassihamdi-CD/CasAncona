@@ -122,6 +122,9 @@ create policy "No anon appointments" on public.appointments for all using (false
 alter table public.appointments add column if not exists consultation_type text not null default 'online' check (consultation_type in ('in_person', 'online'));
 create index if not exists idx_appointments_consultation_type on public.appointments (consultation_type);
 
+-- ========== 2b. Passport document path (Storage) ==========
+alter table public.appointments add column if not exists passport_document_path text;
+
 -- ========== 3. Seed services (only if empty) ==========
 insert into public.services (name, name_en, description, description_en, duration_minutes, price_cents, currency, active, sort_order)
 select * from (values
