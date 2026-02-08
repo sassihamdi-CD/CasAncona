@@ -134,7 +134,27 @@
     "duration": "Durata",
     "videoLink": "Link video",
     "videoLinkHint": "Il link per la video consulenza sarà disponibile a breve.",
-    "backHome": "Torna alla home"
+    "backHome": "Torna alla home",
+    "saveThisPage": "Salva questa pagina: non inviamo conferma via email. Copia il link video o i dettagli qui sotto.",
+    "copyVideoLink": "Copia link video",
+    "copyAllDetails": "Copia tutti i dettagli",
+    "copied": "Copiato",
+    "retrieveLink": "Hai perso il link?",
+    "retrieveLinkText": "Recupera la tua prenotazione con la tua email"
+  },
+  "bookingRetrieve": {
+    "title": "Recupera la tua prenotazione",
+    "lead": "Inserisci l'email usata per la prenotazione per vedere i tuoi prossimi appuntamenti e il link video.",
+    "emailPlaceholder": "La tua email",
+    "submit": "Cerca",
+    "noResults": "Nessuna prenotazione trovata per questa email.",
+    "when": "Data e orario",
+    "service": "Servizio",
+    "duration": "Durata",
+    "videoLink": "Link video",
+    "copyLink": "Copia link",
+    "copied": "Copiato",
+    "backToBook": "Torna a prenotare"
   },
   "officeMap": {
     "heading": "Dove siamo"

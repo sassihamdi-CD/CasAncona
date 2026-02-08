@@ -134,7 +134,27 @@
     "duration": "Durée",
     "videoLink": "Lien vidéo",
     "videoLinkHint": "Le lien pour la consultation vidéo sera disponible sous peu.",
-    "backHome": "Retour à l'accueil"
+    "backHome": "Retour à l'accueil",
+    "saveThisPage": "Enregistrez cette page : nous n'envoyons pas de confirmation par e-mail. Copiez le lien vidéo ou les détails ci-dessous.",
+    "copyVideoLink": "Copier le lien vidéo",
+    "copyAllDetails": "Copier tous les détails",
+    "copied": "Copié",
+    "retrieveLink": "Lien perdu ?",
+    "retrieveLinkText": "Récupérez votre réservation avec votre e-mail"
+  },
+  "bookingRetrieve": {
+    "title": "Récupérer votre réservation",
+    "lead": "Entrez l'e-mail utilisé pour réserver pour voir vos prochains rendez-vous et le lien vidéo.",
+    "emailPlaceholder": "Votre e-mail",
+    "submit": "Rechercher",
+    "noResults": "Aucune réservation trouvée pour cet e-mail.",
+    "when": "Date et heure",
+    "service": "Service",
+    "duration": "Durée",
+    "videoLink": "Lien vidéo",
+    "copyLink": "Copier le lien",
+    "copied": "Copié",
+    "backToBook": "Retour à la réservation"
   },
   "officeMap": {
     "heading": "Où nous trouver"

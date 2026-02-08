@@ -21,6 +21,7 @@ export function BookingConfirmContent() {
   const [data, setData] = useState<AppointmentConfirmation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState<"link" | "all" | null>(null);
 
   const load = useCallback(async () => {
     const sessionId = searchParams?.get("session_id");
@@ -47,6 +48,28 @@ export function BookingConfirmContent() {
     load();
   }, [load]);
 
+  const copyVideoLink = useCallback(() => {
+    if (!data?.videoRoomUrl) return;
+    navigator.clipboard.writeText(data.videoRoomUrl);
+    setCopied("link");
+    setTimeout(() => setCopied(null), 2000);
+  }, [data?.videoRoomUrl]);
+
+  const copyAllDetails = useCallback(() => {
+    if (!data) return;
+    const lines = [
+      t("title"),
+      "",
+      `${t("when")}: ${formatDateTime(data.requestedStartAt)}`,
+      `Servizio: ${data.serviceName}`,
+      `${t("duration")}: ${data.durationMinutes} min`,
+      ...(data.videoRoomUrl ? ["", t("videoLink"), data.videoRoomUrl] : []),
+    ];
+    navigator.clipboard.writeText(lines.join("\n"));
+    setCopied("all");
+    setTimeout(() => setCopied(null), 2000);
+  }, [data, t]);
+
   if (loading) {
     return (
       <div className="container-narrow py-12 text-center text-stone-600">
@@ -67,49 +90,78 @@ export function BookingConfirmContent() {
 
   return (
     <div className="container-narrow py-12">
-        <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-8 shadow-sm sm:p-10">
-          <h1 className="text-2xl font-bold text-stone-900 sm:text-3xl">{t("title")}</h1>
-          <dl className="mt-6 space-y-3">
+      <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-8 shadow-sm sm:p-10">
+        <h1 className="text-2xl font-bold text-stone-900 sm:text-3xl">{t("title")}</h1>
+
+        <p className="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {t("saveThisPage")}
+        </p>
+
+        <dl className="mt-6 space-y-3">
+          <div>
+            <dt className="text-sm font-medium text-stone-500">{t("when")}</dt>
+            <dd className="mt-0.5 text-stone-900">{formatDateTime(data.requestedStartAt)}</dd>
+          </div>
+          <div>
+            <dt className="text-sm font-medium text-stone-500">Servizio</dt>
+            <dd className="mt-0.5 text-stone-900">{data.serviceName}</dd>
+          </div>
+          <div>
+            <dt className="text-sm font-medium text-stone-500">{t("duration")}</dt>
+            <dd className="mt-0.5 text-stone-900">{data.durationMinutes} min</dd>
+          </div>
+          {data.videoRoomUrl && (
             <div>
-              <dt className="text-sm font-medium text-stone-500">{t("when")}</dt>
-              <dd className="mt-0.5 text-stone-900">{formatDateTime(data.requestedStartAt)}</dd>
+              <dt className="text-sm font-medium text-stone-500">{t("videoLink")}</dt>
+              <dd className="mt-0.5 flex flex-wrap items-center gap-2">
+                <a
+                  href={data.videoRoomUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-primary-hover underline break-all"
+                >
+                  {data.videoRoomUrl}
+                </a>
+                <button
+                  type="button"
+                  onClick={copyVideoLink}
+                  className="shrink-0 rounded border border-stone-300 bg-white px-2 py-1 text-xs font-medium text-stone-700 hover:bg-stone-50"
+                >
+                  {copied === "link" ? t("copied") : t("copyVideoLink")}
+                </button>
+              </dd>
             </div>
-            <div>
-              <dt className="text-sm font-medium text-stone-500">Servizio</dt>
-              <dd className="mt-0.5 text-stone-900">{data.serviceName}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-stone-500">{t("duration")}</dt>
-              <dd className="mt-0.5 text-stone-900">{data.durationMinutes} min</dd>
-            </div>
-            {data.videoRoomUrl && (
-              <div>
-                <dt className="text-sm font-medium text-stone-500">{t("videoLink")}</dt>
-                <dd className="mt-0.5">
-                  <a
-                    href={data.videoRoomUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:text-primary-hover underline"
-                  >
-                    {data.videoRoomUrl}
-                  </a>
-                </dd>
-              </div>
-            )}
-            {data.status === "confirmed" && !data.videoRoomUrl && (
-              <p className="mt-4 text-sm text-stone-500">{t("videoLinkHint")}</p>
-            )}
-          </dl>
-          <p className="mt-8">
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
-            >
-              {t("backHome")}
-            </Link>
-          </p>
+          )}
+          {data.status === "confirmed" && !data.videoRoomUrl && (
+            <p className="mt-4 text-sm text-stone-500">{t("videoLinkHint")}</p>
+          )}
+        </dl>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={copyAllDetails}
+            className="rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+          >
+            {copied === "all" ? t("copied") : t("copyAllDetails")}
+          </button>
         </div>
+
+        <p className="mt-6 text-sm text-stone-600">
+          <Link href="/recupera-prenotazione" className="text-primary hover:text-primary-hover underline">
+            {t("retrieveLink")} {t("retrieveLinkText")}
+          </Link>
+        </p>
+
+        <p className="mt-8">
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+          >
+            {t("backHome")}
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

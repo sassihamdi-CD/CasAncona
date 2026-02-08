@@ -134,7 +134,27 @@
     "duration": "Duration",
     "videoLink": "Video link",
     "videoLinkHint": "The video consultation link will be available shortly.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "saveThisPage": "Save this page: we don't send confirmation by email. Copy the video link or details below.",
+    "copyVideoLink": "Copy video link",
+    "copyAllDetails": "Copy all details",
+    "copied": "Copied",
+    "retrieveLink": "Lost your link?",
+    "retrieveLinkText": "Retrieve your booking with your email"
+  },
+  "bookingRetrieve": {
+    "title": "Retrieve your booking",
+    "lead": "Enter the email you used to book to see your upcoming appointments and video link.",
+    "emailPlaceholder": "Your email",
+    "submit": "Search",
+    "noResults": "No bookings found for this email.",
+    "when": "Date and time",
+    "service": "Service",
+    "duration": "Duration",
+    "videoLink": "Video link",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "backToBook": "Back to booking"
   },
   "officeMap": {
     "heading": "Where we are"
