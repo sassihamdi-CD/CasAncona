@@ -118,23 +118,27 @@ export async function PATCH(
         .single();
       const staffRow = staff as Database["public"]["Tables"]["staff"]["Row"] | null;
       if (staffRow?.telegram_chat_id) {
-        const { data: svc } = await supabase
-          .from("services")
-          .select("name")
-          .eq("id", updated.service_id)
-          .single();
-        const serviceName = (svc as { name?: string } | null)?.name ?? "Consultation";
-        await notifyLawyerTelegram({
-          telegramChatId: staffRow.telegram_chat_id,
-          clientName: updated.client_name,
-          clientPhone: updated.client_phone ?? null,
-          serviceName,
-          requestedStartAt: updated.requested_start_at,
-          amountPaidCents: updated.amount_paid_cents,
-          currency: updated.currency ?? null,
-          consultationType: updated.consultation_type === "online" ? "online" : "in_person",
-          videoRoomUrl: updated.video_room_url ?? null,
-        });
+        try {
+          const { data: svc } = await supabase
+            .from("services")
+            .select("name")
+            .eq("id", updated.service_id)
+            .single();
+          const serviceName = (svc as { name?: string } | null)?.name ?? "Consultation";
+          await notifyLawyerTelegram({
+            telegramChatId: staffRow.telegram_chat_id,
+            clientName: updated.client_name,
+            clientPhone: updated.client_phone ?? null,
+            serviceName,
+            requestedStartAt: updated.requested_start_at,
+            amountPaidCents: updated.amount_paid_cents,
+            currency: updated.currency ?? null,
+            consultationType: updated.consultation_type === "online" ? "online" : "in_person",
+            videoRoomUrl: updated.video_room_url ?? null,
+          });
+        } catch (telErr) {
+          console.error("[api/admin/appointments/[id]] Telegram notify failed (payment already saved):", telErr);
+        }
       }
     }
 

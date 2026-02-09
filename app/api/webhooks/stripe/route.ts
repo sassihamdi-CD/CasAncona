@@ -18,128 +18,141 @@ import { notifyLawyerTelegram } from "@/lib/notifications";
 import { AppointmentStatus } from "@/lib/types";
 
 export async function POST(request: NextRequest) {
-  const body = await request.text();
-  const sig = request.headers.get("stripe-signature");
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
-  if (!webhookSecret) {
-    console.error("[webhooks/stripe] STRIPE_WEBHOOK_SECRET not set");
-    return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
-  }
-
-  if (!sig) {
-    return NextResponse.json({ error: "Missing signature" }, { status: 400 });
-  }
-
-  let event: Stripe.Event;
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("[webhooks/stripe] Signature verification failed:", message);
-    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
-  }
+    const body = await request.text();
+    const sig = request.headers.get("stripe-signature");
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
-  if (event.type !== "checkout.session.completed") {
-    return NextResponse.json({ received: true });
-  }
-
-  const session = event.data.object as Stripe.Checkout.Session;
-  const appointmentId = session.metadata?.appointment_id;
-  if (!appointmentId) {
-    console.error("[webhooks/stripe] No appointment_id in metadata");
-    return NextResponse.json({ received: true });
-  }
-
-  const supabase = getSupabaseAdmin();
-
-  type AppointmentRow = Database["public"]["Tables"]["appointments"]["Row"];
-  type StaffRow = Database["public"]["Tables"]["staff"]["Row"];
-
-  const { data: appointment, error: fetchError } = await supabase
-    .from("appointments")
-    .select("*")
-    .eq("id", appointmentId)
-    .single();
-
-  if (fetchError || !appointment) {
-    console.error("[webhooks/stripe] Appointment not found:", appointmentId);
-    return NextResponse.json({ received: true });
-  }
-
-  const apt = appointment as AppointmentRow;
-  if (apt.status !== AppointmentStatus.PENDING_PAYMENT) {
-    return NextResponse.json({ received: true });
-  }
-
-  const isOnline = apt.consultation_type === "online";
-  let roomId: string | null = null;
-  let roomUrl: string | null = null;
-  if (isOnline) {
-    const room = await createVideoRoom({
-      appointmentId,
-      clientName: apt.client_name,
-    });
-    roomId = room.roomId;
-    roomUrl = room.roomUrl;
-  }
-
-  const { error: updateError } = await supabase
-    .from("appointments")
-    .update({
-      status: AppointmentStatus.CONFIRMED,
-      amount_paid_cents: session.amount_total ?? undefined,
-      currency: session.currency ?? undefined,
-      video_room_id: roomId,
-      video_room_url: roomUrl,
-      updated_at: new Date().toISOString(),
-    } as never)
-    .eq("id", appointmentId);
-
-  if (updateError) {
-    console.error("[webhooks/stripe] Update failed:", updateError);
-    return NextResponse.json({ error: "Update failed" }, { status: 500 });
-  }
-
-  console.log("[webhooks/stripe] Appointment confirmed:", appointmentId, "amount:", session.amount_total, "online:", isOnline);
-
-  const { data: serviceRow } = await supabase
-    .from("services")
-    .select("name")
-    .eq("id", apt.service_id)
-    .single();
-  const serviceName = (serviceRow as { name?: string } | null)?.name ?? "Consultation";
-
-  await sendBookingConfirmationEmail({
-    to: apt.client_email,
-    clientName: apt.client_name,
-    serviceName,
-    requestedStartAt: apt.requested_start_at,
-    videoRoomUrl: roomUrl,
-  });
-
-  if (apt.assigned_staff_id) {
-    const { data: staff } = await supabase
-      .from("staff")
-      .select("telegram_chat_id")
-      .eq("id", apt.assigned_staff_id)
-      .single();
-    const staffRow = staff as StaffRow | null;
-    if (staffRow?.telegram_chat_id) {
-      await notifyLawyerTelegram({
-        telegramChatId: staffRow.telegram_chat_id,
-        clientName: apt.client_name,
-        clientPhone: apt.client_phone ?? null,
-        serviceName,
-        requestedStartAt: apt.requested_start_at,
-        amountPaidCents: session.amount_total ?? null,
-        currency: session.currency ?? null,
-        consultationType: apt.consultation_type === "online" ? "online" : "in_person",
-        videoRoomUrl: roomUrl,
-      });
+    if (!webhookSecret) {
+      console.error("[webhooks/stripe] STRIPE_WEBHOOK_SECRET not set");
+      return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
     }
-  }
+    if (!stripeSecretKey) {
+      console.error("[webhooks/stripe] STRIPE_SECRET_KEY not set");
+      return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
+    }
+    if (!sig) {
+      return NextResponse.json({ error: "Missing signature" }, { status: 400 });
+    }
 
-  return NextResponse.json({ received: true });
+    let event: Stripe.Event;
+    try {
+      const stripe = new Stripe(stripeSecretKey);
+      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      console.error("[webhooks/stripe] Signature verification failed:", message);
+      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+    }
+
+    if (event.type !== "checkout.session.completed") {
+      return NextResponse.json({ received: true });
+    }
+
+    const session = event.data.object as Stripe.Checkout.Session;
+    const appointmentId = session.metadata?.appointment_id;
+    if (!appointmentId) {
+      console.error("[webhooks/stripe] No appointment_id in metadata");
+      return NextResponse.json({ received: true });
+    }
+
+    const supabase = getSupabaseAdmin();
+
+    type AppointmentRow = Database["public"]["Tables"]["appointments"]["Row"];
+    type StaffRow = Database["public"]["Tables"]["staff"]["Row"];
+
+    const { data: appointment, error: fetchError } = await supabase
+      .from("appointments")
+      .select("*")
+      .eq("id", appointmentId)
+      .single();
+
+    if (fetchError || !appointment) {
+      console.error("[webhooks/stripe] Appointment not found:", appointmentId);
+      return NextResponse.json({ received: true });
+    }
+
+    const apt = appointment as AppointmentRow;
+    if (apt.status !== AppointmentStatus.PENDING_PAYMENT) {
+      return NextResponse.json({ received: true });
+    }
+
+    const isOnline = apt.consultation_type === "online";
+    let roomId: string | null = null;
+    let roomUrl: string | null = null;
+    if (isOnline) {
+      const room = await createVideoRoom({
+        appointmentId,
+        clientName: apt.client_name,
+      });
+      roomId = room.roomId;
+      roomUrl = room.roomUrl;
+    }
+
+    const { error: updateError } = await supabase
+      .from("appointments")
+      .update({
+        status: AppointmentStatus.CONFIRMED,
+        amount_paid_cents: session.amount_total ?? undefined,
+        currency: session.currency ?? undefined,
+        video_room_id: roomId,
+        video_room_url: roomUrl,
+        updated_at: new Date().toISOString(),
+      } as never)
+      .eq("id", appointmentId);
+
+    if (updateError) {
+      console.error("[webhooks/stripe] Update failed:", updateError);
+      return NextResponse.json({ error: "Update failed" }, { status: 500 });
+    }
+
+    console.log("[webhooks/stripe] Appointment confirmed:", appointmentId, "amount:", session.amount_total, "online:", isOnline);
+
+    const { data: serviceRow } = await supabase
+      .from("services")
+      .select("name")
+      .eq("id", apt.service_id)
+      .single();
+    const serviceName = (serviceRow as { name?: string } | null)?.name ?? "Consultation";
+
+    await sendBookingConfirmationEmail({
+      to: apt.client_email,
+      clientName: apt.client_name,
+      serviceName,
+      requestedStartAt: apt.requested_start_at,
+      videoRoomUrl: roomUrl,
+    });
+
+    if (apt.assigned_staff_id) {
+      const { data: staff } = await supabase
+        .from("staff")
+        .select("telegram_chat_id")
+        .eq("id", apt.assigned_staff_id)
+        .single();
+      const staffRow = staff as StaffRow | null;
+      if (staffRow?.telegram_chat_id) {
+        try {
+          await notifyLawyerTelegram({
+            telegramChatId: staffRow.telegram_chat_id,
+            clientName: apt.client_name,
+            clientPhone: apt.client_phone ?? null,
+            serviceName,
+            requestedStartAt: apt.requested_start_at,
+            amountPaidCents: session.amount_total ?? null,
+            currency: session.currency ?? null,
+            consultationType: apt.consultation_type === "online" ? "online" : "in_person",
+            videoRoomUrl: roomUrl,
+          });
+        } catch (telErr) {
+          console.error("[webhooks/stripe] Telegram notify failed (appointment already confirmed):", telErr);
+        }
+      }
+    }
+
+    return NextResponse.json({ received: true });
+  } catch (e) {
+    console.error("[webhooks/stripe] Unexpected error:", e);
+    return NextResponse.json({ error: "Webhook handler error" }, { status: 500 });
+  }
 }
