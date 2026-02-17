@@ -74,7 +74,7 @@ pointing to the production Supabase project. Otherwise the webhook updates the w
    - Verifies the signature with `STRIPE_WEBHOOK_SECRET`.
    - Reads `appointment_id` from the session metadata.
    - Updates that appointment to `status = confirmed`, sets `amount_paid_cents`, and (for online) creates the video room and saves the link.
-   - Sends confirmation email (if Resend is configured) and Telegram to the lawyer (if configured).
+   - Sends confirmation email (if Brevo is configured) and Telegram to the lawyer (if configured).
 5. The client already sees the confirmation page; the admin and client see the booking as **confirmed** and (for online) with video link.
 
 If step 3 or 4 fails (wrong URL, wrong secret, wrong DB, or code error), the appointment can stay `pending_payment` even though Stripe has the money. So the checklist above is critical.

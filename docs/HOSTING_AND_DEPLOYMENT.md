@@ -58,8 +58,9 @@ Use the same names and values as in your local `.env` (values stay secret; never
 | `ADMIN_EMAIL` | Yes | For admin login |
 | `ADMIN_PASSWORD` | Yes | For admin login |
 | `ADMIN_SESSION_SECRET` | Yes | Random string (e.g. `openssl rand -hex 32`) for session cookies |
-| `RESEND_API_KEY` | If you use email | From Resend dashboard |
-| `EMAIL_FROM` | If you use email | Sender address |
+| `BREVO_API_KEY` | If you use email | From Brevo → SMTP & API → API Keys |
+| `EMAIL_FROM` | If you use email | Verified sender address |
+| `EMAIL_FROM_NAME` | Optional | Sender display name (default: Studio CAS) |
 | `TELEGRAM_BOT_TOKEN` | Optional | If you use lawyer notifications |
 | `MYMEMORY_EMAIL` | Optional | For translation quota |
 

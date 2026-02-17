@@ -58,12 +58,12 @@ The site already has: data model, Supabase migrations, API routes, booking flow 
 
 **Goal:** After a paid booking, the client receives a real confirmation email with the video link.
 
-1. **Resend (or SendGrid)**
-   - Sign up at resend.com, get an API key.
+1. **Brevo (email)**
+   - Sign up at brevo.com, get an API key from SMTP & API → API Keys.
    - Set `RESEND_API_KEY` and `EMAIL_FROM` (e.g. `noreply@yourdomain.com`) in `.env`.
 
 2. **Implement in code**
-   - In `lib/notifications/index.ts`, replace the `sendBookingConfirmationEmail` stub with a real Resend (or SendGrid) call using the same parameters.
+   - Brevo is already integrated in `lib/notifications/index.ts`. Set `BREVO_API_KEY` and `EMAIL_FROM` in `.env`. See `docs/BREVO_EMAIL_SETUP.md`.
 
 **Check:** After completing a paid booking, the client email address receives the confirmation with the video link (or placeholder until Step 4).
 
@@ -141,7 +141,7 @@ The site already has: data model, Supabase migrations, API routes, booking flow 
 |------|-----------|
 | 1    | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `OFFICE_TIMEZONE` |
 | 2    | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` |
-| 3    | `RESEND_API_KEY`, `EMAIL_FROM` |
+| 3    | `BREVO_API_KEY`, `EMAIL_FROM` |
 | 4    | None for Jitsi (free). Optional: `DAILY_API_KEY` if you switch to Daily.co |
 | 5    | `TELEGRAM_BOT_TOKEN` (+ `telegram_chat_id` on staff row) |
 | 6    | Optional: `ADMIN_API_KEY` or Supabase Auth |

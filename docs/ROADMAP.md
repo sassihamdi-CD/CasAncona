@@ -8,7 +8,7 @@ Use this as a backlog. Pick items by priority and add new ideas at the bottom.
 
 ## Fixes & stability
 
-- [ ] **Email in production** — Set `RESEND_API_KEY` and `EMAIL_FROM` in Vercel so confirmation emails send after payment.
+- [ ] **Email in production** — Set `BREVO_API_KEY` and `EMAIL_FROM` in Vercel so confirmation emails send after payment.
 - [ ] **Stripe webhook for production** — Ensure webhook endpoint in Stripe uses your live Vercel URL and the signing secret is in Vercel env.
 - [ ] **Custom domain** — Add your domain (e.g. studiocas.it) in Vercel → Domains and set `NEXT_PUBLIC_APP_URL` to it.
 - [ ] **Admin session** — If admin login is flaky, add or verify `ADMIN_SESSION_SECRET` in Vercel.

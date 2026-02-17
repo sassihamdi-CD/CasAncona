@@ -9,9 +9,9 @@ Use this list to get the site **fully functional** by the weekend. Order matters
 - Database schema + migrations (Supabase)
 - Services in 4 languages (IT, EN, AR, FR) — cards and booking
 - Booking flow: service → type (in person / online) → date → slot → form → submit
-- In-person: free, instant confirmation + **confirmation email** (if Resend is set)
+- In-person: free, instant confirmation + **confirmation email** (if Brevo is set)
 - Online: Stripe Checkout → webhook confirms appointment, creates **Jitsi** video link, sends **email** + **Telegram**
-- **Email:** Resend implemented in `lib/notifications` (set `RESEND_API_KEY` + `EMAIL_FROM`)
+- **Email:** Brevo implemented in `lib/notifications` (set `BREVO_API_KEY` + `EMAIL_FROM`)
 - **Telegram:** Implemented in `lib/notifications` (set `TELEGRAM_BOT_TOKEN`; store `telegram_chat_id` on staff row)
 - **Admin:** `/admin` — enter admin key, see next 14 days appointments and **open video** links
 
@@ -46,12 +46,12 @@ In `.env` you must have:
 
 ---
 
-## 3. Email (Resend)
+## 3. Email (Brevo)
 
 | Variable | Where |
 |----------|--------|
-| `RESEND_API_KEY` | resend.com → API Keys |
-| `EMAIL_FROM` | Sender address (e.g. `noreply@yourdomain.com` or use Resend’s `onboarding@resend.dev` for testing) |
+| `BREVO_API_KEY` | brevo.com → SMTP & API → API Keys (transactional key, not MCP) |
+| `EMAIL_FROM` | Verified sender address (e.g. `noreply@yourdomain.com`) — must be registered in Brevo |
 
 **Check:** After a booking (in-person or online), the client receives the confirmation email.
 
@@ -101,9 +101,10 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
 
-# Email (Resend)
-RESEND_API_KEY=
+# Email (Brevo)
+BREVO_API_KEY=
 EMAIL_FROM=
+EMAIL_FROM_NAME=Studio CAS
 
 # Telegram (optional)
 TELEGRAM_BOT_TOKEN=

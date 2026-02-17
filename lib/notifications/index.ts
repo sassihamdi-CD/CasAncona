@@ -1,6 +1,9 @@
 /**
- * Notifications: Resend (email) and Telegram.
- * Set RESEND_API_KEY + EMAIL_FROM for email; TELEGRAM_BOT_TOKEN for Telegram.
+ * Notifications: Brevo (email) and Telegram.
+ * Set BREVO_API_KEY + EMAIL_FROM + EMAIL_FROM_NAME for email; TELEGRAM_BOT_TOKEN for Telegram.
+ *
+ * Brevo: https://www.brevo.com — get your API key from SMTP & API → API Keys.
+ * You must register a verified sender (from name/email) in Brevo before sending.
  */
 
 function formatDateTime(iso: string): string {
@@ -24,11 +27,16 @@ export async function sendBookingConfirmationEmail(params: {
   videoRoomUrl: string | null;
 }): Promise<void> {
   const { to, clientName, serviceName, requestedStartAt, videoRoomUrl } = params;
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM ?? "onboarding@resend.dev";
+  const apiKey = process.env.BREVO_API_KEY;
+  const fromEmail = process.env.EMAIL_FROM;
+  const fromName = process.env.EMAIL_FROM_NAME ?? "Studio CAS";
 
   if (!apiKey) {
-    console.log("[notifications] sendBookingConfirmationEmail skipped (no RESEND_API_KEY):", to);
+    console.log("[notifications] sendBookingConfirmationEmail skipped (no BREVO_API_KEY):", to);
+    return;
+  }
+  if (!fromEmail) {
+    console.log("[notifications] sendBookingConfirmationEmail skipped (no EMAIL_FROM):", to);
     return;
   }
 
@@ -47,26 +55,27 @@ export async function sendBookingConfirmationEmail(params: {
   `;
 
   try {
-    const res = await fetch("https://api.resend.com/emails", {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        "api-key": apiKey,
       },
       body: JSON.stringify({
-        from,
-        to: [to],
+        sender: { name: fromName, email: fromEmail },
+        to: [{ email: to, name: clientName }],
         subject: `Conferma prenotazione — ${serviceName}`,
-        html,
+        htmlContent: html,
       }),
     });
 
-    const data = (await res.json()) as { id?: string; message?: string };
+    const data = (await res.json()) as { messageId?: string; code?: string; message?: string };
     if (!res.ok) {
-      console.error("[notifications] Resend error:", res.status, data);
+      console.error("[notifications] Brevo error:", res.status, data);
       return;
     }
-    console.log("[notifications] Email sent:", data.id ?? "ok");
+    console.log("[notifications] Email sent:", data.messageId ?? "ok");
   } catch (e) {
     console.error("[notifications] sendBookingConfirmationEmail failed:", e);
   }

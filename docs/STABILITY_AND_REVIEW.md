@@ -38,7 +38,7 @@ Optional (degraded but no crash): `TELEGRAM_BOT_TOKEN`, `RESEND_API_KEY`, `ADMIN
 
 ## Checklist before / after go-live
 
-- [ ] **Vercel**: All required env vars set (Supabase, Stripe, webhook secret, optional: Telegram, Resend, admin).
+- [ ] **Vercel**: All required env vars set (Supabase, Stripe, webhook secret, optional: Telegram, Brevo, admin).
 - [ ] **Stripe**: Webhook URL points to `https://yourdomain.com/api/webhooks/stripe`; endpoint returns 200 on success.
 - [ ] **Supabase**: Passport bucket exists and RLS/policies allow uploads and admin reads (see `CREATE_PASSPORT_BUCKET.sql`).
 - [ ] **Admin**: Test login, create appointment, record payment, print receipt, Telegram page (fetch chat IDs and link to staff).
