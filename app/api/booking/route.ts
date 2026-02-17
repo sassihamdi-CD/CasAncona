@@ -181,7 +181,11 @@ export async function POST(request: NextRequest) {
 
     const stripe = new Stripe(stripeSecretKey);
     const isInPerson = consultationType === "in_person";
-    const stripePriceId = !isInPerson ? svc.stripe_price_id : null;
+    const rawStripePriceId = !isInPerson ? svc.stripe_price_id : null;
+    const stripePriceId =
+      typeof rawStripePriceId === "string" && rawStripePriceId.startsWith("price_")
+        ? rawStripePriceId
+        : null;
     const amountCents = isInPerson ? IN_PERSON_PRICE_CENTS : svc.price_cents;
     const productName = isInPerson ? `Consulenza in sede — ${svc.name}` : svc.name;
 
